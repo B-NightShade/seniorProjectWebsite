@@ -16,8 +16,14 @@ from mysql.connector import errorcode
 app = Flask(__name__, static_url_path='/static')
 
 app.config['SECRET_KEY'] = "secret"
+
+USER = 'ESSWebsite2023'
+PASSWORD = 'ConergyDonation'
+HOST = 'ESSWebsite2023.mysql.pythonanywhere-services.com'
+DATABASE = 'ESSWebsite2023$EES'
+
 try:
-    connection = mysql.connector.connect(user='ESSWebsite2023', password='ConergyDonation', host='ESSWebsite2023.mysql.pythonanywhere-services.com', database='ESSWebsite2023$EES')
+    connection = mysql.connector.connect(user=USER, password=PASSWORD, host=HOST, database=DATABASE)
 except mysql.connector.Error as err:
     if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
         print("Wrong name/password", flush=True)
