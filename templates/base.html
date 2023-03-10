@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet"  type="text/css" href="{{url_for('static', filename='style.css')}}">
+</head>
+
+
+{% if a %}
+<body>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/create">Add Modules</a></li>
+            <li><a href="/update">Update Existing Module</a></li>
+            <li><a href="/delete">Delete Module</a></li>
+            <li><a href="/view">View Modules</a></li>
+        </ul>
+    </nav>
+
+{% else %}
+
+<body>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/login">Login</a></li>
+        </ul>
+    </nav>
+
+{% endif %}
+<h1>{% block heading %} {% endblock %}</h1>
+{% block content %} {% endblock %}
+</body>
+</html>

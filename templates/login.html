@@ -1,16 +1,12 @@
+{% extends "base.html" %}
 <html>
 <head>
     <title>ESS login</title>
     <link rel="stylesheet"  type="text/css" href="{{url_for('static', filename='style.css')}}">
 </head>
-<ul>
-    <li><a href="/create">Add Modules</a></li>
-    <li><a href="/update">Update Existing Module</a></li>
-    <li><a href="/delete">Delete Module</a></li>
-    <li><a href="/view">View Modules</a></li>
-  </ul>
-<h1>Login to access the Solar Solutions Data</h1>
+{% block heading %}Login to access the Solar Solutions Data {% endblock %}
 
+{% block content %}
 <form method="POST">
     username: <input type="text" name="username">
     <br>
@@ -18,5 +14,6 @@
     <br>
     <input type="submit" value="login!">
 </form>
+{% endblock %}
 
 </html>

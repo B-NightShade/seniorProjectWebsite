@@ -37,26 +37,37 @@ else:
 
 #login_manager = LoginManager(app)
 #login_manager.init_app(app)
-
-@app.route('/', methods=['GET','POST'])
+@app.route('/')
 def home():
-    return render_template("login.html")
+    a = False
+    return render_template("home.html", a=a)
+
+
+@app.route('/login', methods=['GET','POST'])
+def login():
+    a = False
+    return render_template("login.html", a=a)
 
 @app.route("/create")
 def create():
-    return render_template("create.html")
+    #a = current_user.is_authenticated
+    a=False
+    return render_template("create.html", a=a)
 
 @app.route("/update")
 def update():
-    return render_template("update.html")
+    a = False
+    return render_template("update.html", a=a)
 
 @app.route("/delete")
 def delete():
-    return render_template("delete.html")
+    a = False
+    return render_template("delete.html", a=a)
 
 @app.route("/view")
 def view():
-    return render_template("view.html")
+    a = False
+    return render_template("view.html", a=a)
 
 if __name__ == '__main__':
     app.run(port=5050)
