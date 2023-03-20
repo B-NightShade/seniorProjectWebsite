@@ -6,4 +6,68 @@
     </head>
 
     {% block heading %} Create {% endblock %}
+
+    {% block content %}
+        <form method = "POST">
+            <h1>Solar panel Tracking List</h1>
+            Donor: <input type="text" name="donor">
+            <br>
+            serial number: <input type = "text" name="serialNumber">
+            <br>
+            Rated Watts: <input type="number" name="ratedWatts" min="0">
+            <br>
+            Panel Maufacturer/Model: <input type="text" name="panelManufacturer">
+            <br>
+            weight(kg): <input type="number" name="weight">
+            <br>
+            Panel Demensions (L,W,D): <input type="text" name="demensions">
+            <br>
+            vmp: <input type="number" name="vmp">
+            <br>
+            imp: <input type="number" name="imp">
+            <br>
+            isc: <input type="number" name="isc">
+            <br>
+            max system voltage: <input type="number" name="maxSysVoltage">
+            <br>
+            Series Fuse: <input type="text" name="seriesFuse">
+            <br>
+            number of cells: <input type="number" name="numCells">
+            <br>
+            Age: <input type="text" name="age">
+            <br>
+            Assigned to project: <input type="text" name="assignedProject">
+            <br>
+            <hr>
+            <h1>QA testing Results</h1>
+            Voc: <input type="number" name="voc">
+            <br>
+            Expected Voc: <input type="number" name="expectedVoc">
+            <br>
+            Isc: <input type="number" name="Isc">
+            <br>
+            Expected Isc: <input type="number" name="expectedIsc">
+            <br>
+            Pmp: <input type="number" name="pmp">
+            <br>
+            Pmp temp coeff %: <input type="number" name="pmpTemp">
+            <br>
+            pmp expected: <input type="number" name="expectedPmp">
+            <br>
+            Irradiance: <input type="number" name="irradiance">
+            <br>
+            Cell temp C: <input type="number" name="cellTempC">
+            <br>
+            Measured watts: <input type="number" name="measuredWatts">
+            <br>
+            Expected Watts: <input type="number" name="expectedWatts">
+            <br>
+            percent of new: <input type="number" name="percentNew">
+            <br>
+            Infrared: <input type="text" name="infrared">
+            <br>
+            <hr>
+            <h1>Defect Modes</h1>
+        </form>
+    {% endblock %}
 </html>
