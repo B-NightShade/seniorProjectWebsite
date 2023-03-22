@@ -9,7 +9,7 @@
 
     {% block content %}
         <form method = "POST">
-            <h1>Solar panel Tracking List</h1>
+            <h1>Solar Module Tracking List</h1>
             Donor: <input type="text" name="donor">
             <br>
             serial number: <input type = "text" name="serialNumber">
@@ -18,9 +18,15 @@
             <br>
             Panel Maufacturer/Model: <input type="text" name="panelManufacturer">
             <br>
+            Model: <input type="text" name="model">
+            <br>
             weight(kg): <input type="number" name="weight">
             <br>
-            Panel Demensions (L,W,D): <input type="text" name="demensions">
+            Panel Demension length: <input type="number" name="length">
+            <br>
+            Panel Demension width: <input type="number" name="width">
+            <br>
+            Panel Demension depth: <input type="number" name="depth">
             <br>
             vmp: <input type="number" name="vmp">
             <br>
@@ -28,46 +34,153 @@
             <br>
             isc: <input type="number" name="isc">
             <br>
-            max system voltage: <input type="number" name="maxSysVoltage">
-            <br>
-            Series Fuse: <input type="text" name="seriesFuse">
-            <br>
-            number of cells: <input type="number" name="numCells">
-            <br>
-            Age: <input type="text" name="age">
-            <br>
-            Assigned to project: <input type="text" name="assignedProject">
-            <br>
-            <hr>
-            <h1>QA testing Results</h1>
-            Voc: <input type="number" name="voc">
-            <br>
-            Expected Voc: <input type="number" name="expectedVoc">
-            <br>
-            Isc: <input type="number" name="Isc">
-            <br>
-            Expected Isc: <input type="number" name="expectedIsc">
-            <br>
-            Pmp: <input type="number" name="pmp">
-            <br>
             Pmp temp coeff %: <input type="number" name="pmpTemp">
             <br>
-            pmp expected: <input type="number" name="expectedPmp">
+            Year of Manufacture: <input type="text" name="year">
             <br>
+            location/intended project: <input type="text" name="location">
+            <br>
+
+            <hr>
+            <h1>QA testing Results</h1>
             Irradiance: <input type="number" name="irradiance">
             <br>
             Cell temp C: <input type="number" name="cellTempC">
             <br>
-            Measured watts: <input type="number" name="measuredWatts">
+            Measured pmp (watts): <input type="number" name="pmp">
             <br>
-            Expected Watts: <input type="number" name="expectedWatts">
-            <br>
-            percent of new: <input type="number" name="percentNew">
-            <br>
-            Infrared: <input type="text" name="infrared">
-            <br>
+
             <hr>
             <h1>Defect Modes</h1>
+            Corrosion # of cells: <input type="number" name="corrosion">
+            <br>
+            Cell cracks # of cells: <input type="number" name="cracks">
+            <br>
+            Eva Browning: <select name="evaBrowning">
+                            <option value="">not tested</option>
+                            <option value="low">low</option>
+                            <option value="medium">medium</option>
+                            <option value="high">high</option>
+                            <option value="extreme">extreme</option>
+                        </select>
+            <br>
+            pattern of Browning: <select name="patternBrowning">
+                            <option value="">not tested</option>
+                            <option value="center">center</option>
+                            <option value="edge">edge</option>
+                            <option value="other">other</option>
+                            <option value="none">none</option>
+                        </select>
+            <br>
+            Frame damage: <select name="frameDamage">
+                <option value="">not tested</option>
+                <option value="yes">yes</option>
+                <option value="no">no</option>
+            </select>
+            <br>
+            Frame seal: <select name="frameSeal">
+                <option value="">not tested</option>
+                <option value="yes">yes</option>
+                <option value="no">no</option>
+            </select>
+            <br>
+            Jbox damage: <select name="jBoxDamage">
+                <option value="">not tested</option>
+                <option value="yes">yes</option>
+                <option value="no">no</option>
+            </select>
+            <br>
+            Jbox loose: <select name="jBoxLoose">
+                <option value="">not tested</option>
+                <option value="yes">yes</option>
+                <option value="no">no</option>
+            </select>
+            <br>
+            nameplate faded/missing: <select name="nameplate">
+                <option value="">not tested</option>
+                <option value="yes">yes</option>
+                <option value="no">no</option>
+            </select>
+            <br>
+            backside cracks: <select name="backsideCracks">
+                <option value="">not tested</option>
+                <option value="yes">yes</option>
+                <option value="no">no</option>
+            </select>
+            <br>
+            backside Bubbles: <select name="backsideBubbles">
+                <option value="">not tested</option>
+                <option value="yes">yes</option>
+                <option value="no">no</option>
+            </select>
+            <br>
+            backside tears/scratches: <select name="backsideTears">
+                <option value="">not tested</option>
+                <option value="yes">yes</option>
+                <option value="no">no</option>
+            </select>
+            <br>
+            backside chalking: <select name="backsideChalking">
+                <option value="">not tested</option>
+                <option value="yes">yes</option>
+                <option value="no">no</option>
+            </select>
+            <br>
+            Frontside burn mark: <select name="frontsideBurn">
+                <option value="">not tested</option>
+                <option value="yes">yes</option>
+                <option value="no">no</option>
+            </select>
+            <br>
+            backside burn mark: <select name="backsideBurn">
+                <option value="">not tested</option>
+                <option value="yes">yes</option>
+                <option value="no">no</option>
+            </select>
+            <br>
+            frontside glass-Scratch/chip/crack: <select name="frontsideGlass">
+                <option value="">not tested</option>
+                <option value="yes">yes</option>
+                <option value="no">no</option>
+            </select>
+            <br>
+            Delamination: <input type="number" name="delamination">
+            <br>
+            Milky discoloration: <input type="number" name="milky">
+            <br>
+            Residual Metal: <input type="number" name="residualMetal">
+            <br>
+            snail tracks- Metal resid <input type="number" name="snailTracks">
+            <br>
+            Future defect 1: <input type="number" name="defectOne">
+            <br>
+            Future defect 2: <input type="number" name="defectTwo">
+            <br>
+            Future defect 3: <input type="number" name="defectThree">
+            <br>
+            Infrared: <select name="infrared">
+                <option value="">not tested</option>
+                <option value="yes">yes</option>
+                <option value="no">no</option>
+            </select>
+            <br>
+            ultraviolet: <select name="ultraviolet">
+                <option value="">not tested</option>
+                <option value="yes">yes</option>
+                <option value="no">no</option>
+            </select>
+
+            <hr>
+            <h1>Final Disposition</h1>
+             disposition: <select name="disposition">
+                            <option value="">not dispositioned</option>
+                            <option value="tierOne">tier 1</option>
+                            <option value="tierTwo">tier 2</option>
+                            <option value="dispose">dispose</option>
+                            <option value="recycle">recycle</option>
+                        </select>
+            <br>
+            <input type="submit">
         </form>
     {% endblock %}
 </html>
