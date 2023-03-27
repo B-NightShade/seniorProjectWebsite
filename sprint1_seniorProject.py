@@ -8,9 +8,8 @@ Created on Tue Feb 21 21:55:14 2023
 from flask import Flask, render_template, request, redirect, url_for
 import mysql.connector
 from mysql.connector import errorcode
-#from flask_login import LoginManager, UserMixin, login_user, \
-    #logout_user, current_user, login_required
-
+from flask_login import LoginManager, UserMixin, login_user, \
+    logout_user, current_user, login_required
 
 
 app = Flask(__name__, static_url_path='/static')
@@ -22,6 +21,7 @@ PASSWORD = 'ConergyDonation'
 HOST = 'ESSWebsite2023.mysql.pythonanywhere-services.com'
 DATABASE = 'ESSWebsite2023$EES'
 
+
 try:
     connection = mysql.connector.connect(user=USER, password=PASSWORD, host=HOST, database=DATABASE)
 except mysql.connector.Error as err:
@@ -32,11 +32,22 @@ except mysql.connector.Error as err:
     else:
         print(err)
 else:
-    print("connected", flush=True)
-    connection.close()
+    print("connected: connection successfule", flush=True)
+    #connection.close()
 
-#login_manager = LoginManager(app)
-#login_manager.init_app(app)
+
+'''
+login_manager = LoginManager(app)
+login_manager.init_app(app)
+
+@login_manager.user_loader
+def load_user(uid):
+    global connection
+    cursor = connection.cursor()
+    query = "SELECT username FROM user_login WHERE"
+    user =
+    return user
+'''
 @app.route('/')
 def home():
     a = False
@@ -46,6 +57,27 @@ def home():
 @app.route('/login', methods=['GET','POST'])
 def login():
     a = False
+    global connection
+    if request.method =="POST":
+        print("hey")
+        username = request.form['username']
+        password = request.form['password']
+        try:
+            cursor = connection.cursor()
+            query = "SELECT Pass FROM user_login WHERE Username = %s"
+            cursor.execute(query, (username,))
+            user=cursor.fetchall()
+            cursor.close()
+            print("user:")
+            print(len(user))
+            if len(user) != 0:
+                for row in user:
+                    userpass = row[0]
+                if password == userpass:
+                    #login_user(user)
+                    return render_template("home.html", a=a)
+        except mysql.connector.Error as err:
+            print("Something went wrong: {}".format(err))
     return render_template("login.html", a=a)
 
 @app.route("/create")
@@ -68,6 +100,13 @@ def delete():
 def view():
     a = False
     return render_template("view.html", a=a)
-
+'''
+@app.route('/logout', methods=['GET','POST'])
+def logout():
+    a = False
+    if request.method == "POST":
+        logout_user()
+    return render_template("logout.html", a=a)
+'''
 if __name__ == '__main__':
     app.run(port=5050)

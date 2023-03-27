@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+<html>
+    <head>
+        <title>Logout</title>
+        <link rel="stylesheet"  type="text/css" href="{{url_for('static', filename='style.css')}}">
+    </head>
+    {% block heading %} view {% endblock %}
+
+    <form method="POST">
+    <input type="logout" value="logout!">
+</form>
+</html>
