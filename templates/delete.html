@@ -7,6 +7,20 @@
     {% block heading %} delete {% endblock %}
 
     {% block content %}
+    <form method = "POST">
+            <h1>Search by options:</h1>
+            <select name="search">
+                <option value="all">all data</option>
+                <option value="donor">by donor</option>
+                <option value="serial">by serial number</option>
+                <option value="manufacturer">by panel manufactuere/model</option>
+                <option value="Model">by Model</option>
+            </select>
+            search parameter: <input type="text" name="searchValue">
+            <br>
+            <input type="submit" vlaue=search>
+   </form>
+
     <table>
         <thead>
             <tr>
@@ -70,6 +84,7 @@
             </tr>
         </thead>
         <tbody>
+            {% if modules is not none %}
             {% for module in modules %}
                 <tr>
                     <td>{{ module.donor }}</td>
@@ -134,5 +149,6 @@
         </tbody>
 
     </table>
+    {% endif %}
     {% endblock %}
 </html>

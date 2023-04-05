@@ -84,6 +84,7 @@
             </tr>
         </thead>
         <tbody>
+            {% if modules is not none %}
             {% for module in modules %}
                 <tr>
                     <td>{{ module.donor }}</td>
@@ -144,6 +145,7 @@
                     <td> {{ module.finalDisposition }}</td>
                 </tr>
             {% endfor %}
+            {% endif %}
         </tbody>
 
     </table>
