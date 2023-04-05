@@ -38,6 +38,7 @@ else:
     print("connected: connection successful", flush=True)
     #connection.close()
 
+
 class Module:
     id = 0
     donor = ""
@@ -95,7 +96,109 @@ class Module:
     futureDefectThree = ""
     infrared = ""
     ultraviolet = ""
+    finalDisposition = ""
 
+def queryall():
+    global connection
+    module = Module()
+    cursor = connection.cursor()
+    query = "SELECT * FROM solar_module_tracking"
+    cursor.execute(query)
+    units=cursor.fetchall()
+    #close the cursor after you grab your data
+    cursor.close()
+    print(units)
+    modules=[]
+    for row in units:
+        module.donor = row[0]
+        module.serialNumber = row[1]
+        module.ratedWatts = row[2]
+        module.moduleManu = row[3]
+        module.model = row[4]
+        module.weight = row[5]
+        module.panelDimensionL = row[6]
+        module.panelDimensionW = row[7]
+        module.panelDimensionD = row [8]
+        module.vmp = row[9]
+        module.imp = row[10]
+        module.voc = row[11]
+        module.isc = row[12]
+        module.pmpTemp = row[13]
+        module.year = row[14]
+        module.location = row[15]
+        module.Irradiance = row[16]
+        module.cellTemp = row[17]
+        module.measuredpmp = row[18]
+        module.expectedpmp = row[19]
+        module.newpmp = row [20]
+        module.id = row[21]
+        id = row[21]
+
+        #add legacy data associated with same module
+        print(id)
+        cursor = connection.cursor()
+        query = "SELECT * FROM legacy_data WHERE Id = %s"
+        cursor.execute(query, (id,))
+        legacy=cursor.fetchall()
+        #close the cursor after you grab your data
+        cursor.close()
+        print(legacy)
+        for l in legacy:
+            module.legacyVoc = l[0]
+            module.legacyExpectedVoc = l[1]
+            module.legacyIsc = l[2]
+            module.legacyExpectedIsc = l[3]
+            module.measuredVocIsc = l[4]
+            module.expectedVocIsc = l[5]
+            module.newVocIsc = l[6]
+            module.legacyInfrared = l[7]
+
+        #add the defect modes for the same module
+        cursor = connection.cursor()
+        query = "SELECT * FROM defect_modes WHERE Id = %s"
+        cursor.execute(query, (id,))
+        defects=cursor.fetchall()
+        #close the cursor after you grab your data
+        cursor.close()
+        for defect in defects:
+            module.corrosion = defect[0]
+            module.cellCracks = defect[1]
+            module.evaBrowning = defect[2]
+            module.patternBrowning = defect[3]
+            module.frameDamage = defect[4]
+            module.frameSeal = defect[5]
+            module.jboxDamage = defect[6]
+            module.jboxloose = defect[7]
+            module.nameplate = defect[8]
+            module.backsideCracks = defect[9]
+            module.backsideBubble = defect[10]
+            module.backsideTears = defect[11]
+            module.backsideChalking = defect[12]
+            module.frontsideBurn = defect[13]
+            module.backsideBurn = defect[14]
+            module.frontsideGlass = defect[15]
+            module.delamination = defect[16]
+            module.milkyDiscolor = defect[17]
+            module.residualMetal = defect[18]
+            module.snailTracks = defect[19]
+            module.snailTracksRes = defect[20]
+            module.futureDefect = defect[21]
+            module.futureDefectTwo = defect[22]
+            module.futureDefectThree = defect[23]
+            module.infrared = defect[24]
+            module.ultraviolet = defect[25]
+
+            #add final disposition for the same module
+            cursor = connection.cursor()
+            query = "SELECT * FROM final_disposition WHERE Id = %s"
+            cursor.execute(query, (id,))
+            disposition=cursor.fetchall()
+            #close the cursor after you grab your data
+            cursor.close()
+            for d in disposition:
+                module.disposition = d[3]
+        modules.append(module)
+        return modules
 
 '''
 login_manager = LoginManager(app)
@@ -171,12 +274,6 @@ def create():
 def update():
     #a = current_user.is_authenticated
     a= False
-    return render_template("update.html", a=a)
-
-@app.route("/delete")
-def delete():
-    #a = current_user.is_authenticated
-    a= False
     global connection
     module = Module()
     cursor = connection.cursor()
@@ -209,8 +306,8 @@ def delete():
         module.measuredpmp = row[18]
         module.expectedpmp = row[19]
         module.newpmp = row [20]
-        module.id = row[23]
-        id = row[23]
+        module.id = row[21]
+        id = row[21]
 
         #add legacy data associated with same module
         print(id)
@@ -266,15 +363,138 @@ def delete():
             module.infrared = defect[24]
             module.ultraviolet = defect[25]
 
+            #add final disposition for the same module
+            cursor = connection.cursor()
+            query = "SELECT * FROM final_disposition WHERE Id = %s"
+            cursor.execute(query, (id,))
+            disposition=cursor.fetchall()
+            #close the cursor after you grab your data
+            cursor.close()
+            for d in disposition:
+                module.disposition = d[3]
+        modules.append(module)
+    return render_template("update.html", a=a, modules=modules)
 
+@app.route("/delete")
+def delete():
+    #a = current_user.is_authenticated
+    a= False
+    '''
+    global connection
+    module = Module()
+    cursor = connection.cursor()
+    query = "SELECT * FROM solar_module_tracking"
+    cursor.execute(query)
+    units=cursor.fetchall()
+    #close the cursor after you grab your data
+    cursor.close()
+    print(units)
+    modules=[]
+    for row in units:
+        module.donor = row[0]
+        module.serialNumber = row[1]
+        module.ratedWatts = row[2]
+        module.moduleManu = row[3]
+        module.model = row[4]
+        module.weight = row[5]
+        module.panelDimensionL = row[6]
+        module.panelDimensionW = row[7]
+        module.panelDimensionD = row [8]
+        module.vmp = row[9]
+        module.imp = row[10]
+        module.voc = row[11]
+        module.isc = row[12]
+        module.pmpTemp = row[13]
+        module.year = row[14]
+        module.location = row[15]
+        module.Irradiance = row[16]
+        module.cellTemp = row[17]
+        module.measuredpmp = row[18]
+        module.expectedpmp = row[19]
+        module.newpmp = row [20]
+        module.id = row[21]
+        id = row[21]
+
+        #add legacy data associated with same module
+        print(id)
+        cursor = connection.cursor()
+        query = "SELECT * FROM legacy_data WHERE Id = %s"
+        cursor.execute(query, (id,))
+        legacy=cursor.fetchall()
+        #close the cursor after you grab your data
+        cursor.close()
+        print(legacy)
+        for l in legacy:
+            module.legacyVoc = l[0]
+            module.legacyExpectedVoc = l[1]
+            module.legacyIsc = l[2]
+            module.legacyExpectedIsc = l[3]
+            module.measuredVocIsc = l[4]
+            module.expectedVocIsc = l[5]
+            module.newVocIsc = l[6]
+            module.legacyInfrared = l[7]
+
+        #add the defect modes for the same module
+        cursor = connection.cursor()
+        query = "SELECT * FROM defect_modes WHERE Id = %s"
+        cursor.execute(query, (id,))
+        defects=cursor.fetchall()
+        #close the cursor after you grab your data
+        cursor.close()
+        for defect in defects:
+            module.corrosion = defect[0]
+            module.cellCracks = defect[1]
+            module.evaBrowning = defect[2]
+            module.patternBrowning = defect[3]
+            module.frameDamage = defect[4]
+            module.frameSeal = defect[5]
+            module.jboxDamage = defect[6]
+            module.jboxloose = defect[7]
+            module.nameplate = defect[8]
+            module.backsideCracks = defect[9]
+            module.backsideBubble = defect[10]
+            module.backsideTears = defect[11]
+            module.backsideChalking = defect[12]
+            module.frontsideBurn = defect[13]
+            module.backsideBurn = defect[14]
+            module.frontsideGlass = defect[15]
+            module.delamination = defect[16]
+            module.milkyDiscolor = defect[17]
+            module.residualMetal = defect[18]
+            module.snailTracks = defect[19]
+            module.snailTracksRes = defect[20]
+            module.futureDefect = defect[21]
+            module.futureDefectTwo = defect[22]
+            module.futureDefectThree = defect[23]
+            module.infrared = defect[24]
+            module.ultraviolet = defect[25]
+
+            #add final disposition for the same module
+            cursor = connection.cursor()
+            query = "SELECT * FROM final_disposition WHERE Id = %s"
+            cursor.execute(query, (id,))
+            disposition=cursor.fetchall()
+            #close the cursor after you grab your data
+            cursor.close()
+            for d in disposition:
+                module.disposition = d[3]
         modules.append(module)
     print(modules)
+    '''
+    modules = queryall()
     return render_template("delete.html", a=a,modules=modules)
 
-@app.route("/view")
+
+@app.route("/view", methods=['GET','POST'])
 def view():
     a= False
     #a = current_user.is_authenticated
+    if request.method =="POST":
+        searchParameter = request.form['search']
+        print(searchParameter)
+        if searchParameter == "all":
+            modules = queryall()
+            return render_template("view.html", a=a, modules=modules)
     return render_template("view.html", a=a)
 
 @app.route('/logout', methods=['GET','POST'])

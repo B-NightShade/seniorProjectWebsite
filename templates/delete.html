@@ -66,6 +66,7 @@
                 <th>infrared</th>
                 <th>ultraviolet</th>
                 <th>Final disposition</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -126,6 +127,8 @@
                     <td> {{ module.futureDefectThree }} </td>
                     <td> {{ module.infrared }} </td>
                     <td> {{ module.ultraviolet }} </td>
+                    <td> {{ module.finalDisposition }}</td>
+                    <td> <a href = "/delete/{{ module.id }}">DELETE</a></td> </td>
                 </tr>
             {% endfor %}
         </tbody>

@@ -5,4 +5,133 @@
         <link rel="stylesheet"  type="text/css" href="{{url_for('static', filename='style.css')}}">
     </head>
     {% block heading %} update {% endblock%}
+    {% block content %}
+    <table>
+        <thead>
+            <tr>
+                <th>Donor</th>
+                <th>Serial#</th>
+                <th>Rated Watts</th>
+                <th>Module Manufacturer</th>
+                <th>Model</th>
+                <th>Weight(kg)</th>
+                <th>Panel dimension length</th>
+                <th>Panel dimension width</th>
+                <th>Panel dimension depth</th>
+                <th>Vmp</th>
+                <th>Imp</th>
+                <th>Voc</th>
+                <th>Isc</th>
+                <th>pmp temp Coeff %</th>
+                <th>year of manufacture</th>
+                <th>location</th>
+                <th>Voc</th>
+                <th>Expected Voc</th>
+                <th>Isc</th>
+                <th>Expected Isc</th>
+                <th>Irradiance</th>
+                <th>Cell temp C</th>
+                <th>measured pmp</th>
+                <th>pmp expected</th>
+                <th>% of new pmp</th>
+                <th>Measured Voc x Isc watts</th>
+                <th>Expected Voc x Isc</th>
+                <th>% new Voc x Isc</th>
+                <th>infrared</th>
+                <th>corrosion # cells</th>
+                <th>cell cracks # cells</th>
+                <th>EVA browning</th>
+                <th>Pattern of browning</th>
+                <th>Frame damage</th>
+                <th>Frame seal</th>
+                <th>JBox damage</th>
+                <th>JBox loose</th>
+                <th>Nameplate faded/missing</th>
+                <th>Backside cracks</th>
+                <th>Backside bubbles</th>
+                <th>Backside tears/scatches</th>
+                <th>backside chalking</th>
+                <th>frontside burn</th>
+                <th>backside burn</th>
+                <th>frontside glass- scratch/chip/crack</th>
+                <th>delamination</th>
+                <th>milky discoloration</th>
+                <th>residual metal</th>
+                <th>snail tracks-no residue</th>
+                <th>snail track-residue</th>
+                <th>furture defect</th>
+                <th>future defect 2</th>
+                <th>future defect 3</th>
+                <th>infrared</th>
+                <th>ultraviolet</th>
+                <th>Final disposition</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for module in modules %}
+                <tr>
+                    <td>{{ module.donor }}</td>
+                    <td>{{ module.serialNumber }}</td>
+                    <td> {{ module.ratedWatts }}</td>
+                    <td> {{ module.moduleManu }}</td>
+                    <td> {{ module.model }}</td>
+                    <td> {{ module.weight }}</td>
+                    <td> {{ module.panelDimensionL }}</td>
+                    <td> {{ module.panelDimensionW }}</td>
+                    <td> {{ module.panelDimensionD }}</td>
+                    <td> {{ module.vmp }}</td>
+                    <td> {{ module.imp }}</td>
+                    <td> {{ module.voc }}</td>
+                    <td> {{ module.isc }}</td>
+                    <td> {{ module.pmpTemp }}</td>
+                    <td> {{ module.year }}</td>
+                    <td> {{ module.location }}</td>
+                    <td> {{ module.legacyVoc }}</td>
+                    <td> {{ module.legacyExpectedVoc }} </td>
+                    <td> {{ module.legacyIsc }}</td>
+                    <td> {{ module.legacyExpectedIsc }}</td>
+                    <td> {{ module.Irradiance }}</td>
+                    <td> {{ module.cellTemp }}</td>
+                    <td> {{ module.measuredpmp }}</td>
+                    <td> {{ module.expectedpmp }}</td>
+                    <td> {{ module.newpmp }}</td>
+                    <td> {{ module.measuredVocIsc }}</td>
+                    <td> {{ module.expectedVocIsc }}</td>
+                    <td> {{ module.newVocIsc }}</td>
+                    <td> {{ module.legacyInfrared }}</td>
+                    <td> {{ module.corrosion }} </td>
+                    <td> {{ module.cellCracks }} </td>
+                    <td> {{ module.evaBrowning }} </td>
+                    <td> {{ module.patternBrowning }} </td>
+                    <td> {{ module.frameDamage }} </td>
+                    <td> {{ module.frameSeal }} </td>
+                    <td> {{ module.jboxDamage }} </td>
+                    <td> {{ module.jboxloose }} </td>
+                    <td> {{ module.nameplate }} </td>
+                    <td> {{ module.backsideCracks }} </td>
+                    <td> {{ module.backsideBubble }} </td>
+                    <td> {{ module.backsideTears }} </td>
+                    <td> {{ module.backsideChalking }} </td>
+                    <td> {{ module.frontsideBurn }} </td>
+                    <td> {{ module.backsideBurn }} </td>
+                    <td> {{ module.frontsideGlass }} </td>
+                    <td> {{ module.delamination }} </td>
+                    <td> {{ module.milkyDiscolor }} </td>
+                    <td> {{ module.residualMetal }} </td>
+                    <td> {{ module.snailTracks }} </td>
+                    <td> {{ module.snailTracksRes }} </td>
+                    <td> {{ module.futureDefect }} </td>
+                    <td> {{ module.futureDefectTwo }} </td>
+                    <td> {{ module.futureDefectThree }} </td>
+                    <td> {{ module.infrared }} </td>
+                    <td> {{ module.ultraviolet }} </td>
+                    <td> {{ module.finalDisposition }}</td>
+                    <td> <a href = "/update/{{ module.id }}">UPDATE</a></td> </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+    {% endblock %}
 </html>
