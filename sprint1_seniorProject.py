@@ -102,7 +102,7 @@ def queryall():
     global connection
     module = Module()
     cursor = connection.cursor()
-    query = "SELECT * FROM solar_module_tracking"
+    query = "SELECT * FROM solar_module"
     cursor.execute(query)
     units=cursor.fetchall()
     #close the cursor after you grab your data
@@ -204,18 +204,18 @@ def queryByObject(name, searchObject):
     global connection
     module = Module()
     cursor = connection.cursor()
-    #query = "SELECT * FROM solar_module_tracking WHERE Doner=%s"
+    #query = "SELECT * FROM solar_module WHERE Doner=%s"
     query = ""
     if (name == "donor"):
-        query = "SELECT * FROM solar_module_tracking WHERE Doner=%s"
-    #if (name == "serial"):
-        #query = "SELECT * FROM solar_module_tracking WHERE Serial=%s"
+        query = "SELECT * FROM solar_module WHERE Doner=%s"
+    if (name == "serial"):
+        query = "SELECT * FROM solar_module WHERE serial=%s"
     if (name == "manufacturer"):
-        query = "SELECT * FROM solar_module_tracking WHERE Module_manufacturer=%s"
+        query = "SELECT * FROM solar_module WHERE Module_manufacturer=%s"
     if (name == "model"):
-        query = "SELECT * FROM solar_module_tracking WHERE Module=%s"
+        query = "SELECT * FROM solar_module WHERE Module=%s"
     if (name == "id"):
-        query = "SELECT * FROM solar_module_tracking WHERE Id=%s"
+        query = "SELECT * FROM solar_module WHERE Id=%s"
     cursor.execute(query,(searchObject,))
     units=cursor.fetchall()
     #close the cursor after you grab your data
@@ -424,7 +424,7 @@ def updateEntry(id):
         #add serial after the column name fixed
         #add Pmp_Watts_Expected = %s, %_of_New_Pmp = %s calculations later
         donor = request.form['donor']
-        #serial = request.form['serialNumber']
+        serial = request.form['serialNumber']
         ratedWatts = request.form['ratedWatts']
         panelManufacturer = request.form['panelManufacturer']
         model = request.form['model']
@@ -442,6 +442,8 @@ def updateEntry(id):
         irradiance = request.form['irradiance']
         cellTemp= request.form['cellTempC']
         measuredPmp = request.form['pmp']
+
+        #update table one
         query = "UPDATE solar_module_tracking\
                     SET Doner = %s, Rated_watts = %s, Module_manufacturer = %s, Module = %s,\
                     Weight_kg = %s, Panel_Dimensions_L = %s, Panel_Dimensions_W = %s, Panel_Dimensions_D = %s,\
@@ -449,6 +451,9 @@ def updateEntry(id):
                     Cell_Temp_C = %s, Measured_Pmp_watts = %s\
                     WHERE Id = %s"
         cursor.execute(query, (donor,ratedWatts,panelManufacturer,model,weight,length,width,depth,vmp,imp,voc,isc,year,cellTemp,measuredPmp,id))
+        cursor.close()
+
+        #update defect modes
     return redirect(url_for("view"))
 
 @app.route("/delete", methods=['GET','POST'])

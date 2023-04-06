@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+<html>
+    <head>
+        <title>Add Modules</title>
+        <link rel="stylesheet"  type="text/css" href="{{url_for('static', filename='style.css')}}">
+    </head>
+
+    {% block heading %} Update Entry {% endblock %}
+
+    {% block content %}
+    {% for module in modules %}
+        <form method = "POST">
+            <h1>Solar Module Tracking List</h1>
+            Donor: <input type="text" name="donor" value="{{ module.donor }}">
+            <br>
+            serial number: <input type = "text" name="serialNumber" value="{{ module.serialNumber }}">
+            <br>
+            Rated Watts: <input type="number" name="ratedWatts" min="0" value="{{ module.ratedWatts }}" step="any">
+            <br>
+            Panel Maufacturer/Model: <input type="text" name="panelManufacturer" value="{{ module.moduleManu }}">
+            <br>
+            Model: <input type="text" name="model" value="{{ module.model }}">
+            <br>
+            weight(kg): <input type="number" name="weight" value="{{ module.weight }}" step="any">
+            <br>
+            Panel Demension length: <input type="number" name="length" value="{{ module.panelDimensionL }}" step="any">
+            <br>
+            Panel Demension width: <input type="number" name="width" value="{{ module.panelDimensionW }}" step="any">
+            <br>
+            Panel Demension depth: <input type="number" name="depth" value="{{ module.panelDimensionD }}" step="any">
+            <br>
+            vmp: <input type="number" name="vmp" value="{{ module.vmp }}" step="any">
+            <br>
+            imp: <input type="number" name="imp" value="{{ module.imp }}" step="any">
+            <br>
+            voc: <input type="number" name="voc" value="{{ module.voc }}" step="any">
+            <br>
+            isc: <input type="number" name="isc" value="{{ module.isc }}" step="any">
+            <br>
+            Pmp temp coeff %: <input type="number" name="pmpTemp" value="{{ module.pmpTemp }}" step="any">
+            <br>
+            Year of Manufacture: <input type="text" name="year" value="{{ module.year }}">
+            <br>
+            location/intended project: <input type="text" name="location" value="{{ module.loaction }}">
+            <br>
+
+            <hr>
+            <h1>QA testing Results</h1>
+            Irradiance: <input type="number" name="irradiance" value="{{ module.Irradiance }}" step="any">
+            <br>
+            Cell temp C: <input type="number" name="cellTempC" value="{{ module.cellTemp }}" step="any">
+            <br>
+            Measured pmp (watts): <input type="number" name="pmp" value="{{ module.measuredpmp }}" step="any">
+            <br>
+
+            <hr>
+            <h1>Defect Modes</h1>
+            Corrosion # of cells: <input type="number" name="corrosion" value="{{ module.corrosion }}" step="any">
+            <br>
+            Cell cracks # of cells: <input type="number" name="cracks" value="{{ module.cellCracks }}" step="any">
+            <br>
+            Eva Browning: <select name="evaBrowning" value="{{ module.evaBrowning }}">
+                            <option value="">not tested</option>
+                            <option value="low">low</option>
+                            <option value="medium">medium</option>
+                            <option value="high">high</option>
+                            <option value="extreme">extreme</option>
+                        </select>
+            <br>
+            pattern of Browning: <select name="patternBrowning" value="{{ module.patternBrowning }}">
+                            <option value="">not tested</option>
+                            <option value="center">center</option>
+                            <option value="edge">edge</option>
+                            <option value="other">other</option>
+                            <option value="none">none</option>
+                        </select>
+            <br>
+            Frame damage: <select name="frameDamage" value="{{ module.frameDamage }}">
+                <option value="">not tested</option>
+                <option value="yes">yes</option>
+                <option value="no">no</option>
+            </select>
+            <br>
+            Frame seal: <select name="frameSeal" value="{{ module.frameSeal }}">
+                <option value="">not tested</option>
+                <option value="yes">yes</option>
+                <option value="no">no</option>
+            </select>
+            <br>
+            Jbox damage: <select name="jBoxDamage" value="{{ module.jboxDamage }}">
+                <option value="">not tested</option>
+                <option value="yes">yes</option>
+                <option value="no">no</option>
+            </select>
+            <br>
+            Jbox loose: <select name="jBoxLoose" value="{{ module.jboxloose }}">
+                <option value="">not tested</option>
+                <option value="yes">yes</option>
+                <option value="no">no</option>
+            </select>
+            <br>
+            nameplate faded/missing: <select name="nameplate" value="{{ module.nameplate }}">
+                <option value="">not tested</option>
+                <option value="yes">yes</option>
+                <option value="no">no</option>
+            </select>
+            <br>
+            backside cracks: <select name="backsideCracks" value="{{ module.backsideCracks }}">
+                <option value="">not tested</option>
+                <option value="yes">yes</option>
+                <option value="no">no</option>
+            </select>
+            <br>
+            backside Bubbles: <select name="backsideBubbles" value="{{ module.backsideBubbles }}">
+                <option value="">not tested</option>
+                <option value="yes">yes</option>
+                <option value="no">no</option>
+            </select>
+            <br>
+            backside tears/scratches: <select name="backsideTears" value="{{ module.backsideTears }}">
+                <option value="">not tested</option>
+                <option value="yes">yes</option>
+                <option value="no">no</option>
+            </select>
+            <br>
+            backside chalking: <select name="backsideChalking" value="{{ module.backsideChalking }}">
+                <option value="">not tested</option>
+                <option value="yes">yes</option>
+                <option value="no">no</option>
+            </select>
+            <br>
+            Frontside burn mark: <select name="frontsideBurn" value="{{ module.frontsideBurn }}">
+                <option value="">not tested</option>
+                <option value="yes">yes</option>
+                <option value="no">no</option>
+            </select>
+            <br>
+            backside burn mark: <select name="backsideBurn" value="{{ module.backsideBurn }}">
+                <option value="">not tested</option>
+                <option value="yes">yes</option>
+                <option value="no">no</option>
+            </select>
+            <br>
+            frontside glass-Scratch/chip/crack: <select name="frontsideGlass" value="{{ module.frontsideGlass }}">
+                <option value="">not tested</option>
+                <option value="yes">yes</option>
+                <option value="no">no</option>
+            </select>
+            <br>
+            Delamination: <input type="number" name="delamination" value="{{ module.delamination }}" step="any">
+            <br>
+            Milky discoloration: <input type="number" name="milky" value="{{ module.milkyDiscolor }}" step="any">
+            <br>
+            Residual Metal: <input type="number" name="residualMetal" value="{{ module.residualMetal }}" step="any">
+            <br>
+            snail tracks-no Metal resid <input type="number" name="snailTracks" value="{{ module.snailTracks }}" step="any">
+            <br>
+            snail tracks- Metal resid <input type="number" name="snailTracksRes" value="{{ module.snailTracksRes }}" step="any">
+            <br>
+            Future defect 1: <input type="number" name="defectOne" value="{{ module.futureDefect }}" step="any">
+            <br>
+            Future defect 2: <input type="number" name="defectTwo" value="{{ module.futureDefectTwo }}" step="any">
+            <br>
+            Future defect 3: <input type="number" name="defectThree" value="{{ module.futureDefectThree }}" step="any">
+            <br>
+            Infrared: <select name="infrared" value="{{ module.infrared }}">
+                <option value="">not tested</option>
+                <option value="yes">yes</option>
+                <option value="no">no</option>
+            </select>
+            <br>
+            ultraviolet: <select name="ultraviolet" value="{{ module.ultraviolet }}">
+                <option value="">not tested</option>
+                <option value="yes">yes</option>
+                <option value="no">no</option>
+            </select>
+
+            <hr>
+            <h1>Final Disposition</h1>
+             disposition: <select name="disposition" value="{{ module.finalDisposition }}">
+                            <option value="">not dispositioned</option>
+                            <option value="tierOne">tier 1</option>
+                            <option value="tierTwo">tier 2</option>
+                            <option value="dispose">dispose</option>
+                            <option value="recycle">recycle</option>
+                        </select>
+            <br>
+            <input type="submit" value="Update">
+        </form>
+    {% endfor %}
+    {% endblock %}
+</html>
