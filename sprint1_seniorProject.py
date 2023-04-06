@@ -155,7 +155,7 @@ def queryall():
 
         #add the defect modes for the same module
         cursor = connection.cursor()
-        query = "SELECT * FROM defect_modes WHERE Id = %s"
+        query = "SELECT * FROM defectModes WHERE Id = %s"
         cursor.execute(query, (id,))
         defects=cursor.fetchall()
         #close the cursor after you grab your data
@@ -267,7 +267,7 @@ def queryByObject(name, searchObject):
 
         #add the defect modes for the same module
         cursor = connection.cursor()
-        query = "SELECT * FROM defect_modes WHERE Id = %s"
+        query = "SELECT * FROM defectModes WHERE Id = %s"
         cursor.execute(query, (id,))
         defects=cursor.fetchall()
         #close the cursor after you grab your data
@@ -457,6 +457,46 @@ def updateEntry(id):
         cursor.close()
 
         #update defect modes
+        corrosion = request.form['corrosion']
+        cracks = request.form['cracks']
+        evaBrowning = request.form['evaBrowning']
+        patternBrowning = request.form['patternBrowning']
+        frameDamage = request.form['frameDamage']
+        frameSeal = request.form['frameSeal']
+        jBoxDamage = request.form['jBoxDamage']
+        jBoxLoose = request.form['jBoxLoose']
+        nameplate = request.form['nameplate']
+        backsideCracks = request.form['backsideCracks']
+        backsideBubbles = request.form['backsideBubbles']
+        backsideTears = request.form['backsideTears']
+        backsideChalking = request.form['backsideChalking']
+        frontsideBurn = request.form['frontsideBurn']
+        backsideBurn = request.form['backsideBurn']
+        frontsideGlass = request.form['frontsideGlass']
+        delamination = request.form['delamination']
+        milky = request.form['milky']
+        residualMetal = request.form['residualMetal']
+        snailTracks = request.form['snailTracks']
+        snailTracksRes = request.form['snailTracksRes']
+        defectOne = request.form['defectOne']
+        defectTwo = request.form['defectTwo']
+        defectThree = request.form['defectThree']
+        infrared = request.form['infrared']
+        ultraviolet = request.form['ultraviolet']
+
+        #scarch-chip-crack
+        cursor = connection.cursor()
+        query = "UPDATE defectModes\
+                    SET Corrosion_cells = %s, Cell_Cracks = %s, EVA_Browning = %s, Pattern_of_Browning = %s, Frame_Damage= %s,\
+                    Frame_Seal = %s, Jbox_Damage = %s, Jbox_Loose = %s, Nameplate_Faded_Missing = %s, Backside_Cracks = %s,\
+                    Backside_Bubbles = %s, Backside_Tears_Scratches = %s,Backside_Chalking  = %s,Frontside_Burn_Mark = %s,Backside_Burn_Mark = %s, Frontside_Burn_Mark = %s,\
+                    Frontside_Glass = %s, Delamination = %s, Milky_Discoloration = %s, Residual_Metal = %s,Snail_Tracks=%s, Snail_Tracks_Resid=%s, Future_Defect_1=%s,\
+                    Future_Defect_2=%s, Future_Defect_3=%s, Infrared=%s, Ultraviolet=%s\
+                    WHERE Id = %s"
+        cursor.execute(query, (corrosion,cracks,evaBrowning,patternBrowning,frameDamage,frameSeal,jBoxDamage,jBoxLoose,nameplate,backsideCracks,backsideBubbles,backsideTears,backsideChalking,\
+                                frontsideBurn,backsideBurn,frontsideBurn,frontsideGlass,delamination,milky,residualMetal,snailTracks,snailTracksRes,defectOne,defectTwo,defectThree,infrared,ultraviolet,id))
+        connection.commit()
+        cursor.close()
     return redirect(url_for("view"))
 
 @app.route("/delete", methods=['GET','POST'])
