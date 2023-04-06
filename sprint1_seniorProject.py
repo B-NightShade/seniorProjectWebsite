@@ -214,7 +214,8 @@ def queryByObject(name, searchObject):
         query = "SELECT * FROM solar_module_tracking WHERE Module_manufacturer=%s"
     if (name == "model"):
         query = "SELECT * FROM solar_module_tracking WHERE Module=%s"
-
+    if (name == "id"):
+        query = "SELECT * FROM solar_module_tracking WHERE Id=%s"
     cursor.execute(query,(searchObject,))
     units=cursor.fetchall()
     #close the cursor after you grab your data
@@ -409,6 +410,47 @@ def update():
             return render_template("update.html", a=a, modules=modules)
     return render_template("update.html", a=a)
 
+@app.route('/update/<id>', methods=['GET','POST'])
+def updateEntry(id):
+    #a = current_user.is_authenticated
+    a= False
+    global connection
+    print(id)
+    if request.method == "GET":
+        modules = queryByObject("id",id)
+        return render_template("updateForm.html",a=a,modules=modules)
+    if request.method == "POST":
+        cursor = connection.cursor()
+        #add serial after the column name fixed
+        #add Pmp_Watts_Expected = %s, %_of_New_Pmp = %s calculations later
+        donor = request.form['donor']
+        #serial = request.form['serialNumber']
+        ratedWatts = request.form['ratedWatts']
+        panelManufacturer = request.form['panelManufacturer']
+        model = request.form['model']
+        weight = request.form['weight']
+        length = request.form['length']
+        width = request.form['width']
+        depth = request.form['depth']
+        vmp = request.form['vmp']
+        imp = request.form['imp']
+        voc = request.form['voc']
+        isc = request.form['isc']
+        pmpTemp = request.form['pmpTemp']
+        year = request.form['year']
+        location = request.form['location']
+        irradiance = request.form['irradiance']
+        cellTemp= request.form['cellTempC']
+        measuredPmp = request.form['pmp']
+        query = "UPDATE solar_module_tracking\
+                    SET Doner = %s, Rated_watts = %s, Module_manufacturer = %s, Module = %s,\
+                    Weight_kg = %s, Panel_Dimensions_L = %s, Panel_Dimensions_W = %s, Panel_Dimensions_D = %s,\
+                    VMP = %s, IMP = %s, Voc = %s, Isc = %s, Year_of_Manufacture = %s,\
+                    Cell_Temp_C = %s, Measured_Pmp_watts = %s\
+                    WHERE Id = %s"
+        cursor.execute(query, (donor,ratedWatts,panelManufacturer,model,weight,length,width,depth,vmp,imp,voc,isc,year,cellTemp,measuredPmp,id))
+    return redirect(url_for("view"))
+
 @app.route("/delete", methods=['GET','POST'])
 def delete():
     #a = current_user.is_authenticated
@@ -436,6 +478,11 @@ def delete():
             modules = queryByObject("model", model)
             return render_template("delete.html", a=a, modules=modules)
     return render_template("delete.html", a=a)
+
+@app.route('/delete/<id>')
+def deleteEntry(id):
+    print(id)
+    return redirect(url_for("view"))
 
 
 @app.route("/view", methods=['GET','POST'])
