@@ -137,7 +137,7 @@ def queryall():
         #add legacy data associated with same module
         print(id)
         cursor = connection.cursor()
-        query = "SELECT * FROM legacy_data WHERE Id = %s"
+        query = "SELECT * FROM legacyData WHERE Id = %s"
         cursor.execute(query, (id,))
         legacy=cursor.fetchall()
         #close the cursor after you grab your data
@@ -150,8 +150,8 @@ def queryall():
             module.legacyExpectedIsc = l[3]
             module.measuredVocIsc = l[4]
             module.expectedVocIsc = l[5]
-            module.newVocIsc = l[6]
-            module.legacyInfrared = l[7]
+            module.newVocIsc = l[9]
+            module.legacyInfrared = l[6]
 
         #add the defect modes for the same module
         cursor = connection.cursor()
@@ -204,10 +204,9 @@ def queryByObject(name, searchObject):
     global connection
     module = Module()
     cursor = connection.cursor()
-    #query = "SELECT * FROM solar_module WHERE Doner=%s"
     query = ""
     if (name == "donor"):
-        query = "SELECT * FROM solar_module WHERE Doner=%s"
+        query = "SELECT * FROM solar_module WHERE donor=%s"
     if (name == "serial"):
         query = "SELECT * FROM solar_module WHERE serial=%s"
     if (name == "manufacturer"):
@@ -250,7 +249,7 @@ def queryByObject(name, searchObject):
         #add legacy data associated with same module
         print(id)
         cursor = connection.cursor()
-        query = "SELECT * FROM legacy_data WHERE Id = %s"
+        query = "SELECT * FROM legacyData WHERE Id = %s"
         cursor.execute(query, (id,))
         legacy=cursor.fetchall()
         #close the cursor after you grab your data
@@ -263,8 +262,8 @@ def queryByObject(name, searchObject):
             module.legacyExpectedIsc = l[3]
             module.measuredVocIsc = l[4]
             module.expectedVocIsc = l[5]
-            module.newVocIsc = l[6]
-            module.legacyInfrared = l[7]
+            module.newVocIsc = l[9]
+            module.legacyInfrared = l[6]
 
         #add the defect modes for the same module
         cursor = connection.cursor()
@@ -443,14 +442,18 @@ def updateEntry(id):
         cellTemp= request.form['cellTempC']
         measuredPmp = request.form['pmp']
 
+        print("voc: " + str(voc))
+        print("vmp: " + str(vmp))
+        print("id: " + str(id))
         #update table one
-        query = "UPDATE solar_module_tracking\
-                    SET Doner = %s, Rated_watts = %s, Module_manufacturer = %s, Module = %s,\
+        query = "UPDATE solar_module\
+                    SET donor = %s, serial = %s, Rated_watts = %s, Module_manufacturer = %s, Module = %s,\
                     Weight_kg = %s, Panel_Dimensions_L = %s, Panel_Dimensions_W = %s, Panel_Dimensions_D = %s,\
-                    VMP = %s, IMP = %s, Voc = %s, Isc = %s, Year_of_Manufacture = %s,\
-                    Cell_Temp_C = %s, Measured_Pmp_watts = %s\
+                    VMP = %s, IMP = %s, Voc = %s, Isc = %s,pmpTemp = %s, Year_of_Manufacture = %s, Location=%s,\
+                    Irradiance = %s, Cell_Temp_C = %s, Measured_Pmp_watts = %s\
                     WHERE Id = %s"
-        cursor.execute(query, (donor,ratedWatts,panelManufacturer,model,weight,length,width,depth,vmp,imp,voc,isc,year,cellTemp,measuredPmp,id))
+        cursor.execute(query, (donor,serial,ratedWatts,panelManufacturer,model,weight,length,width,depth,vmp,imp,voc,isc,pmpTemp,year,location,irradiance,cellTemp,measuredPmp,id))
+        connection.commit()
         cursor.close()
 
         #update defect modes
