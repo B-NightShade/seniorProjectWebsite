@@ -387,11 +387,86 @@ def login():
             print("Something went wrong: {}".format(err))
     return render_template("login.html", a=a)
 
-@app.route("/create")
+@app.route("/create", methods=['GET','POST'])
 #@login_required
 def create():
     #a = current_user.is_authenticated
     a= False
+    connection = createConnection()
+    if request.method == "POST":
+        donor = request.form['donor']
+        serial = request.form['serialNumber']
+        ratedWatts = request.form['ratedWatts']
+        panelManufacturer = request.form['panelManufacturer']
+        model = request.form['model']
+        weight = request.form['weight']
+        length = request.form['length']
+        width = request.form['width']
+        depth = request.form['depth']
+        vmp = request.form['vmp']
+        imp = request.form['imp']
+        voc = request.form['voc']
+        isc = request.form['isc']
+        pmpTemp = request.form['pmpTemp']
+        year = request.form['year']
+        location = request.form['location']
+        irradiance = request.form['irradiance']
+        cellTemp= request.form['cellTempC']
+        measuredPmp = request.form['pmp']
+
+        cursor = connection.cursor()
+        query = 'INSERT INTO solar_module\
+                    (donor, serial, Rated_watts, Module_manufacturer, Module,\
+                    Weight_kg, Panel_Dimensions_L, Panel_Dimensions_W, Panel_Dimensions_D,\
+                    VMP, IMP, Voc, Isc,pmpTemp, Year_of_Manufacture, Location,\
+                    Irradiance, Cell_Temp_C, Measured_Pmp_watts)\
+                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
+        cursor.execute(query, (donor,serial,ratedWatts,panelManufacturer,model,weight,length,width,depth,vmp,imp,voc,isc,pmpTemp,year,location,irradiance,cellTemp,measuredPmp))
+        connection.commit()
+        cursor.close()
+
+        corrosion = request.form['corrosion']
+        cracks = request.form['cracks']
+        evaBrowning = request.form['evaBrowning']
+        patternBrowning = request.form['patternBrowning']
+        frameDamage = request.form['frameDamage']
+        frameSeal = request.form['frameSeal']
+        jBoxDamage = request.form['jBoxDamage']
+        jBoxLoose = request.form['jBoxLoose']
+        nameplate = request.form['nameplate']
+        backsideCracks = request.form['backsideCracks']
+        backsideBubbles = request.form['backsideBubbles']
+        backsideTears = request.form['backsideTears']
+        backsideChalking = request.form['backsideChalking']
+        frontsideBurn = request.form['frontsideBurn']
+        backsideBurn = request.form['backsideBurn']
+        frontsideGlass = request.form['frontsideGlass']
+        delamination = request.form['delamination']
+        milky = request.form['milky']
+        residualMetal = request.form['residualMetal']
+        snailTracks = request.form['snailTracks']
+        snailTracksRes = request.form['snailTracksRes']
+        defectOne = request.form['defectOne']
+        defectTwo = request.form['defectTwo']
+        defectThree = request.form['defectThree']
+        infrared = request.form['infrared']
+        ultraviolet = request.form['ultraviolet']
+
+        #scarch-chip-crack
+        cursor = connection.cursor()
+        query = 'INSERT INTO defectModes\
+                    (Corrosion_cells, Cell_Cracks, EVA_Browning, Pattern_of_Browning, Frame_Damage,\
+                    Frame_Seal, Jbox_Damage, Jbox_Loose, Nameplate_Faded_Missing, Backside_Cracks,\
+                    Backside_Bubbles, Backside_Tears_Scratches,Backside_Chalking,Frontside_Burn_Mark,Backside_Burn_Mark,\
+                    Frontside_Glass, Delamination, Milky_Discoloration, Residual_Metal,Snail_Tracks, Snail_Tracks_Resid, Future_Defect_1,\
+                    Future_Defect_2, Future_Defect_3, Infrared, Ultraviolet,id)\
+                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,(SELECT MAX(Id)FROM solar_module))'
+        cursor.execute(query, (corrosion,cracks,evaBrowning,patternBrowning,frameDamage,frameSeal,jBoxDamage,jBoxLoose,nameplate,backsideCracks,backsideBubbles,backsideTears,backsideChalking,frontsideBurn,backsideBurn,frontsideGlass,delamination,milky,residualMetal,snailTracks,snailTracksRes,defectOne,defectTwo,defectThree,infrared,ultraviolet))
+        connection.commit()
+        cursor.close()
+
+        #add in final disposition when we iron that out
+        connection.close()
     return render_template("create.html", a=a)
 
 @app.route("/update", methods=['GET','POST'])
