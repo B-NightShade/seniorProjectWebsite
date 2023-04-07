@@ -24,19 +24,20 @@ DATABASE = 'ESSWebsite2023$EES'
 '''
 db = MySQLdb.connect(user=USER, db=DATABASE, passwd=PASSWORD, host=HOST)
 '''
-
-try:
-    connection = mysql.connector.connect(user=USER, password=PASSWORD, host=HOST, database=DATABASE)
-except mysql.connector.Error as err:
-    if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-        print("Wrong name/password", flush=True)
-    elif err.errno == errorcode.ER_BAD_DB_ERROR:
-        print("Database does not exist", flush=True)
+def createConnection():
+    try:
+        connection = mysql.connector.connect(user=USER, password=PASSWORD, host=HOST, database=DATABASE)
+    except mysql.connector.Error as err:
+        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+            print("Wrong name/password", flush=True)
+        elif err.errno == errorcode.ER_BAD_DB_ERROR:
+            print("Database does not exist", flush=True)
+        else:
+            print(err)
     else:
-        print(err)
-else:
-    print("connected: connection successful", flush=True)
-    #connection.close()
+        print("connected: connection successful", flush=True)
+        #connection.close()
+        return connection
 
 
 class Module:
@@ -99,14 +100,16 @@ class Module:
     finalDisposition = ""
 
 def queryall():
-    global connection
+    connection = createConnection()
     module = Module()
-    cursor = connection.cursor()
+    cursor = connection.cursor(buffered=True)
     query = "SELECT * FROM solar_module"
     cursor.execute(query)
+    connection.commit()
     units=cursor.fetchall()
     #close the cursor after you grab your data
     cursor.close()
+    print("units:")
     print(units)
     modules=[]
     for row in units:
@@ -136,9 +139,10 @@ def queryall():
 
         #add legacy data associated with same module
         print(id)
-        cursor = connection.cursor()
+        cursor = connection.cursor(buffered=True)
         query = "SELECT * FROM legacyData WHERE Id = %s"
         cursor.execute(query, (id,))
+        connection.commit()
         legacy=cursor.fetchall()
         #close the cursor after you grab your data
         cursor.close()
@@ -197,11 +201,15 @@ def queryall():
             cursor.close()
             for d in disposition:
                 module.disposition = d[3]
-        modules.append(module)
-        return modules
+        copyModule = Module()
+        copyModule = module
+        modules.append(copyModule)
+        module = Module()
+    connection.close()
+    return modules
 
 def queryByObject(name, searchObject):
-    global connection
+    connection = createConnection()
     module = Module()
     cursor = connection.cursor()
     query = ""
@@ -309,8 +317,12 @@ def queryByObject(name, searchObject):
             cursor.close()
             for d in disposition:
                 module.disposition = d[3]
-        modules.append(module)
-        return modules
+        copyModule = Module()
+        copyModule = module
+        modules.append(copyModule)
+        module = Module()
+    connection.close()
+    return modules
 '''
 login_manager = LoginManager(app)
 login_manager.init_app(app)
@@ -340,7 +352,7 @@ def home():
 def login():
     #a = current_user.is_authenticated
     a= False
-    global connection
+    connection = createConnection()
     if request.method =="POST":
         print("hey")
         username = request.form['username']
@@ -369,6 +381,7 @@ def login():
                     print("hey there")
                     login_user(user[0])
                     print("done")
+                    connection.close()
                     return render_template("home.html", a=a)
         except mysql.connector.Error as err:
             print("Something went wrong: {}".format(err))
@@ -413,7 +426,7 @@ def update():
 def updateEntry(id):
     #a = current_user.is_authenticated
     a= False
-    global connection
+    connection = createConnection()
     print(id)
     if request.method == "GET":
         modules = queryByObject("id",id)
@@ -497,6 +510,8 @@ def updateEntry(id):
                                 frontsideBurn,backsideBurn,frontsideBurn,frontsideGlass,delamination,milky,residualMetal,snailTracks,snailTracksRes,defectOne,defectTwo,defectThree,infrared,ultraviolet,id))
         connection.commit()
         cursor.close()
+        connection.close()
+        #add final disposition
     return redirect(url_for("view"))
 
 @app.route("/delete", methods=['GET','POST'])
@@ -530,6 +545,30 @@ def delete():
 @app.route('/delete/<id>')
 def deleteEntry(id):
     print(id)
+    connection = createConnection()
+
+    #remove that row from legacy data
+    cursor = connection.cursor()
+    query = "DELETE FROM legacyData WHERE Id = %s"
+    cursor.execute(query, (id,))
+    connection.commit()
+    cursor.close()
+
+    #remove that row from defect modes
+    cursor = connection.cursor()
+    query = "DELETE FROM defectModes WHERE Id = %s"
+    cursor.execute(query, (id,))
+    connection.commit()
+    cursor.close()
+    #remove from final dispostion once that is sorted out!
+
+    #remove that row from solar_module table
+    cursor = connection.cursor()
+    query = "DELETE FROM solar_module WHERE Id = %s"
+    cursor.execute(query, (id,))
+    connection.commit()
+    cursor.close()
+    connection.close()
     return redirect(url_for("view"))
 
 
@@ -542,6 +581,8 @@ def view():
         print(searchParameter)
         if searchParameter == "all":
             modules = queryall()
+            print(view)
+            print(modules)
             return render_template("view.html", a=a, modules=modules)
         if searchParameter == "donor":
             donor = request.form['searchValue']
