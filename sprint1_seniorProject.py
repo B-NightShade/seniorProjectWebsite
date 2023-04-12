@@ -5,11 +5,12 @@ Created on Tue Feb 21 21:55:14 2023
 @author: weste
 """
 
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for,session
 import mysql.connector
 from mysql.connector import errorcode
 from flask_login import LoginManager, UserMixin, login_user, \
     logout_user, current_user, login_required
+
 
 
 app = Flask(__name__, static_url_path='/static')
@@ -21,9 +22,9 @@ PASSWORD = 'ConergyDonation'
 HOST = 'ESSWebsite2023.mysql.pythonanywhere-services.com'
 DATABASE = 'ESSWebsite2023$EES'
 
-'''
-db = MySQLdb.connect(user=USER, db=DATABASE, passwd=PASSWORD, host=HOST)
-'''
+loggedin = False;
+
+
 def createConnection():
     try:
         connection = mysql.connector.connect(user=USER, password=PASSWORD, host=HOST, database=DATABASE)
@@ -98,6 +99,39 @@ class Module:
     infrared = ""
     ultraviolet = ""
     finalDisposition = ""
+
+class User(UserMixin):
+    def __init__(self, username, password):
+        self.Username = username
+        self.Pass = password
+        self._authenticated = False
+
+    def is_authenticated(self):
+        return self._authenticated
+
+    def is_active(self):
+        return True
+
+    def is_annonymous(self):
+        return False
+
+    def get_id(self):
+        connection = createConnection()
+        cursor = connection.cursor()
+        query = "SELECT * FROM user_login WHERE Username = %s"
+        cursor.execute(query, (self.Username,))
+        users=cursor.fetchall()
+        #close the cursor after you grab your data
+        cursor.close()
+        self._authenticated = True
+        for row in users:
+            uname = row[0]
+            u_pass = row[1]
+            u_id = row[2]
+        user = User(uname,u_pass)
+        return user
+
+
 
 def queryall():
     connection = createConnection()
@@ -194,7 +228,7 @@ def queryall():
 
             #add final disposition for the same module
             cursor = connection.cursor()
-            query = "SELECT * FROM final_disposition WHERE Id = %s"
+            query = "SELECT * FROM finalDisposition WHERE Id = %s"
             cursor.execute(query, (id,))
             disposition=cursor.fetchall()
             #close the cursor after you grab your data
@@ -310,7 +344,7 @@ def queryByObject(name, searchObject):
 
             #add final disposition for the same module
             cursor = connection.cursor()
-            query = "SELECT * FROM final_disposition WHERE Id = %s"
+            query = "SELECT * FROM finalDisposition WHERE Id = %s"
             cursor.execute(query, (id,))
             disposition=cursor.fetchall()
             #close the cursor after you grab your data
@@ -323,6 +357,7 @@ def queryByObject(name, searchObject):
         module = Module()
     connection.close()
     return modules
+
 '''
 login_manager = LoginManager(app)
 login_manager.init_app(app)
@@ -330,20 +365,18 @@ login_manager.init_app(app)
 @login_manager.user_loader
 def load_user(uid):
     print("in load_user")
-    global connection
-    cursor = connection.cursor()
-    query = "SELECT Pass FROM user_login WHERE id = %s"
-    cursor.execute(query, (uid,))
-    user=cursor.fetchone()
-    cursor.close()
-    print(user)
-    return user
-    '''
+    return uid
+'''
 
 
 @app.route('/')
 def home():
-    a= False
+    #global loggedin
+    #a = loggedin
+    if 'loggedin' in session:
+        a = True
+    else:
+        a= False
     #a = current_user.is_authenticated
     return render_template("home.html", a=a)
 
@@ -351,7 +384,14 @@ def home():
 @app.route('/login', methods=['GET','POST'])
 def login():
     #a = current_user.is_authenticated
-    a= False
+    #global loggedin
+    #a = loggedin
+    if 'loggedin' in session:
+        a = True
+    else:
+        a =False
+    if(a == True):
+        return redirect(url_for("home"))
     connection = createConnection()
     if request.method =="POST":
         print("hey")
@@ -372,17 +412,26 @@ def login():
                     userpass = row[0]
                 if password == userpass:
                     print("ugh I made it here")
+                    '''
                     cursor = connection.cursor()
-                    query = "SELECT id FROM user_login WHERE Username = %s AND Pass = %s"
+                    query = "SELECT * FROM user_login WHERE Username = %s AND Pass = %s"
                     cursor.execute(query, (username, userpass))
-                    user=cursor.fetchone()
+                    users=cursor.fetchall()
                     cursor.close()
-                    print(user[0])
+                    for row in users:
+                        user_username = row[0]
+                        user_password = row[1]
                     print("hey there")
-                    login_user(user[0])
-                    print("done")
+                    user = User(user_username, user_password)
+                    print("user:")
+                    print(user)
+                    print(type(user))
+                    login_user(user)
+                    print("done"
                     connection.close()
-                    return render_template("home.html", a=a)
+                    '''
+                    session['loggedin'] = True
+                    return redirect(url_for('home'))
         except mysql.connector.Error as err:
             print("Something went wrong: {}".format(err))
     return render_template("login.html", a=a)
@@ -679,12 +728,15 @@ def view():
 
 @app.route('/logout', methods=['GET','POST'])
 def logout():
+    '''
     a= False
     #a = current_user.is_authenticated
     if request.method == "POST":
         logout_user()
         print("successfully logged out")
-    return render_template("logout.html", a=a)
+    '''
+    session.pop("loggedin", None)
+    return redirect(url_for("home"))
 
 if __name__ == '__main__':
     app.run(port=5050)
