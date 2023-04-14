@@ -22,8 +22,6 @@ PASSWORD = 'ConergyDonation'
 HOST = 'ESSWebsite2023.mysql.pythonanywhere-services.com'
 DATABASE = 'ESSWebsite2023$EES'
 
-loggedin = False;
-
 
 def createConnection():
     try:
@@ -440,7 +438,11 @@ def login():
 #@login_required
 def create():
     #a = current_user.is_authenticated
-    a= False
+    #a= False
+    if 'loggedin' in session:
+        a = True
+    else:
+        return redirect(url_for("login"))
     connection = createConnection()
     if request.method == "POST":
         donor = request.form['donor']
@@ -521,7 +523,11 @@ def create():
 @app.route("/update", methods=['GET','POST'])
 def update():
     #a = current_user.is_authenticated
-    a= False
+    #a= False
+    if 'loggedin' in session:
+        a = True
+    else:
+        return redirect(url_for("login"))
     if request.method =="POST":
         searchParameter = request.form['search']
         print(searchParameter)
@@ -549,7 +555,11 @@ def update():
 @app.route('/update/<id>', methods=['GET','POST'])
 def updateEntry(id):
     #a = current_user.is_authenticated
-    a= False
+    #a= False
+    if 'loggedin' in session:
+        a = True
+    else:
+        return redirect(url_for("login"))
     connection = createConnection()
     print(id)
     if request.method == "GET":
@@ -641,7 +651,11 @@ def updateEntry(id):
 @app.route("/delete", methods=['GET','POST'])
 def delete():
     #a = current_user.is_authenticated
-    a= False
+    #a= False
+    if 'loggedin' in session:
+        a = True
+    else:
+        return redirect(url_for("login"))
     if request.method =="POST":
         searchParameter = request.form['search']
         print(searchParameter)
@@ -698,8 +712,12 @@ def deleteEntry(id):
 
 @app.route("/view", methods=['GET','POST'])
 def view():
-    a= False
+    #a= False
     #a = current_user.is_authenticated
+    if 'loggedin' in session:
+        a = True
+    else:
+        return redirect(url_for("login"))
     if request.method =="POST":
         searchParameter = request.form['search']
         print(searchParameter)
