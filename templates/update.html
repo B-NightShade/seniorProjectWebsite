@@ -78,6 +78,7 @@
                 <th>infrared</th>
                 <th>ultraviolet</th>
                 <th>Final disposition</th>
+                <th>Comments</th>
                 <th></th>
             </tr>
         </thead>
@@ -141,6 +142,7 @@
                     <td> {{ module.infrared }} </td>
                     <td> {{ module.ultraviolet }} </td>
                     <td> {{ module.finalDisposition }}</td>
+                    <td> {{ module.comments }}</td>
                     <td> <a href = "/update/{{ module.id }}">UPDATE</a></td> </td>
                 </tr>
             {% endfor %}

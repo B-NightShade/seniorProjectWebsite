@@ -3,7 +3,9 @@
     <head>
         <title>Delete Modules</title>
         <link rel="stylesheet"  type="text/css" href="{{url_for('static', filename='style.css')}}">
+
     </head>
+    <body>
     {% block heading %} delete {% endblock %}
 
     {% block content %}
@@ -80,6 +82,7 @@
                 <th>infrared</th>
                 <th>ultraviolet</th>
                 <th>Final disposition</th>
+                <th>Comments</th>
                 <th></th>
             </tr>
         </thead>
@@ -143,12 +146,28 @@
                     <td> {{ module.infrared }} </td>
                     <td> {{ module.ultraviolet }} </td>
                     <td> {{ module.finalDisposition }}</td>
-                    <td> <a href = "/delete/{{ module.id }}">DELETE</a></td> </td>
+                    <td> {{ module.comments }}</td>
+                    <!--<td> <a href = "/delete/{{ module.id }}">DELETE</a></td> </td>-->
+                    <td> <button onclick="deletePrompt({{ module.id }})">DELETE</button></td>
                 </tr>
             {% endfor %}
         </tbody>
 
     </table>
     {% endif %}
+        <script>
+        function deletePrompt(id){
+            console.log("Prompt code starts");
+            let password = prompt("Password Required");
+            alert(password);
+            if (password == "hello") {
+                window.location.href="/delete/"+id;
+            } else {
+                location.reload();
+            }
+        }
+
+    </script>
     {% endblock %}
+</body>
 </html>

@@ -97,6 +97,7 @@ class Module:
     infrared = ""
     ultraviolet = ""
     finalDisposition = ""
+    comments = ""
 
 class User(UserMixin):
     def __init__(self, username, password):
@@ -232,7 +233,8 @@ def queryall():
             #close the cursor after you grab your data
             cursor.close()
             for d in disposition:
-                module.disposition = d[3]
+                module.disposition = d[1]
+                module.comments = d[2]
         copyModule = Module()
         copyModule = module
         modules.append(copyModule)
@@ -348,7 +350,8 @@ def queryByObject(name, searchObject):
             #close the cursor after you grab your data
             cursor.close()
             for d in disposition:
-                module.disposition = d[3]
+                module.disposition = d[1]
+                module.comments = d[2]
         copyModule = Module()
         copyModule = module
         modules.append(copyModule)
@@ -516,7 +519,18 @@ def create():
         connection.commit()
         cursor.close()
 
+        finalDisposition = request.form['disposition']
+        comments = request.form['comments']
+
         #add in final disposition when we iron that out
+        cursor = connection.cursor()
+        query = 'INSERT INTO finalDisposition\
+            (Final_Disposition,Comments,id)\
+            VALUES (%s,%s,(SELECT MAX(Id)FROM solar_module))'
+        cursor.execute(query,(finalDisposition, comments))
+        connection.commit()
+        cursor.close()
+
         connection.close()
     return render_template("create.html", a=a)
 
@@ -644,8 +658,19 @@ def updateEntry(id):
                                 frontsideBurn,backsideBurn,frontsideBurn,frontsideGlass,delamination,milky,residualMetal,snailTracks,snailTracksRes,defectOne,defectTwo,defectThree,infrared,ultraviolet,id))
         connection.commit()
         cursor.close()
-        connection.close()
+
         #add final disposition
+        finalDisposition = request.form['disposition']
+        comments = request.form['comments']
+
+        cursor = connection.cursor()
+        query = "UPDATE finalDisposition\
+                    SET Final_Disposition = %s, Comments = %s\
+                    WHERE Id = %s"
+        cursor.execute(query,(finalDisposition, comments,id))
+        connection.commit()
+        cursor.close()
+        connection.close()
     return redirect(url_for("view"))
 
 @app.route("/delete", methods=['GET','POST'])
@@ -683,6 +708,7 @@ def delete():
 @app.route('/delete/<id>')
 def deleteEntry(id):
     print(id)
+    print("In the /delete/id")
     connection = createConnection()
 
     #remove that row from legacy data
@@ -698,7 +724,13 @@ def deleteEntry(id):
     cursor.execute(query, (id,))
     connection.commit()
     cursor.close()
+
     #remove from final dispostion once that is sorted out!
+    cursor = connection.cursor()
+    query = "DELETE FROM finalDisposition WHERE Id = %s"
+    cursor.execute(query, (id,))
+    connection.commit()
+    cursor.close()
 
     #remove that row from solar_module table
     cursor = connection.cursor()
