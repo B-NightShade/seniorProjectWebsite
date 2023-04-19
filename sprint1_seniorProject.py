@@ -444,6 +444,9 @@ def create():
     #a= False
     if 'loggedin' in session:
         a = True
+        donor = ""
+        model = ""
+        panelManufacturer = ""
     else:
         return redirect(url_for("login"))
     connection = createConnection()
@@ -532,7 +535,13 @@ def create():
         cursor.close()
 
         connection.close()
-    return render_template("create.html", a=a)
+
+        repeat = request.form['continue']
+        if (repeat == "no"):
+            donor = ""
+            model = ""
+            panelManufacturer = ""
+    return render_template("create.html", a=a, donor=donor, model=model,panelManufacturer=panelManufacturer)
 
 @app.route("/update", methods=['GET','POST'])
 def update():

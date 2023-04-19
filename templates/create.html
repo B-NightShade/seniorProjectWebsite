@@ -10,15 +10,15 @@
     {% block content %}
         <form method = "POST">
             <h1>Solar Module Tracking List</h1>
-            Donor: <input type="text" name="donor">
+            Donor: <input type="text" name="donor" value="{{donor}}" required>
             <br>
-            serial number: <input type = "text" name="serialNumber">
+            serial number: <input type = "text" name="serialNumber" required>
             <br>
             Rated Watts: <input type="number" name="ratedWatts" min="0" step="any">
             <br>
-            Panel Maufacturer/Model: <input type="text" name="panelManufacturer">
+            Panel Maufacturer/Model: <input type="text" name="panelManufacturer" value="{{panelManufacturer}}"required>
             <br>
-            Model: <input type="text" name="model">
+            Model: <input type="text" name="model" value="{{model}}" required>
             <br>
             weight(kg): <input type="number" name="weight" step="any">
             <br>
@@ -186,7 +186,7 @@
             <br>
             comments: <textarea name="comments" rows="2" cols="40"></textarea>
             <br>
-            countinue batch: <input type ="radio" name="continue" value="yes">Yes
+            countinue batch: <input type ="radio" name="continue" value="yes" required>Yes
                             <input type="radio" name="continue" value="no">No
             <input type="submit">
         </form>

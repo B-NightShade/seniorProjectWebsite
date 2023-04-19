@@ -11,15 +11,15 @@
     {% for module in modules %}
         <form method = "POST">
             <h1>Solar Module Tracking List</h1>
-            Donor: <input type="text" name="donor" value="{{ module.donor }}">
+            Donor: <input type="text" name="donor" value="{{ module.donor }}" required>
             <br>
-            serial number: <input type = "text" name="serialNumber" value="{{ module.serialNumber }}">
+            serial number: <input type = "text" name="serialNumber" value="{{ module.serialNumber }}" required>
             <br>
             Rated Watts: <input type="number" name="ratedWatts" min="0" value="{{ module.ratedWatts }}" step="any">
             <br>
-            Panel Maufacturer/Model: <input type="text" name="panelManufacturer" value="{{ module.moduleManu }}">
+            Panel Maufacturer/Model: <input type="text" name="panelManufacturer" value="{{ module.moduleManu }}" required>
             <br>
-            Model: <input type="text" name="model" value="{{ module.model }}">
+            Model: <input type="text" name="model" value="{{ module.model }}" required>
             <br>
             weight(kg): <input type="number" name="weight" value="{{ module.weight }}" step="any">
             <br>
