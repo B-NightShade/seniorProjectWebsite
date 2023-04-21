@@ -783,22 +783,107 @@ def view():
         if searchParameter == "donor":
             donor = request.form['searchValue']
             modules = queryByObject("donor", donor)
+            if action == "csv":
+                timestr = time.strftime("%Y_%m_%d-%I_%M_%S_%p")
+                filename = timestr + ".csv"
+                with open(filename,'w',newline='')as f:
+                    writer = csv.writer(f)
+                    writer.writerow(['Donor','Serial number','Rated Watts', 'Module Manufacturer','Model','Weight kg','panel Dimension L', 'panel Dimension W', 'panel Dimension D',\
+                    'Vmp','Imp','Voc','Isc','Pmp temp coeff %','year of manufacture','location/intended project', 'Voc','Expected','Isc','Expected','Irradiance','Cell Temp c','Measured Pmp',\
+                    'Pmp watts Expected', '% of New Pmp','Measured Voc x Isc Watts','Expected Voc x Isc', '% of new Voc x Isc', 'infrared', 'corrosion # of cells', 'cell cracks # of cells',\
+                    'Eva Browning', 'Pattern of Browning', 'Frame Damage', 'Frame seal','Jbox damage','Jbox Loose','Nameplate faded/mising','Backside crakcs', 'Backside Bubbles', 'Backside Tears',\
+                    'Backside Chalking','Frontside Burn','Backside burn','Frontside glass-scratch/chip/crack','Delamination','Milky disoloration','residual metal','snail tracks-no resid', 'snail tracks -metal resid',\
+                    'Future defect', 'future defect 2', 'future defect 3', 'infrared','ultraviolet','final disposition','Comments'])
+                    for m in modules:
+                        writer.writerow([m.donor,m.serialNumber,m.ratedWatts,m.moduleManu,m.model,m.weight,m.panelDimensionL,m.panelDimensionW,m.panelDimensionD,m.vmp,m.imp,m.voc,m.isc,\
+                        m.pmpTemp,m.year,m.location,m.legacyVoc,m.legacyExpectedVoc,m.legacyIsc,m.legacyExpectedIsc,m.Irradiance,m.cellTemp,m.measuredpmp,m.expectedpmp,m.newpmp,m.measuredVocIsc,\
+                        m.expectedVocIsc,m.newVocIsc,m.legacyInfrared,m.corrosion,m.cellCracks,m.evaBrowning,m.patternBrowning,m.frameDamage,m.frameSeal,m.jboxDamage,m.jboxloose,m.nameplate,\
+                        m.backsideCracks,m.backsideBubbles,m.backsideTears,m.backsideChalking,m.frontsideBurn,m.backsideBurn,m.frontsideGlass,m.delamination,m.milkyDiscolor,m.residualMetal,\
+                        m.snailTracks,m.snailTracksRes,m.futureDefect,m.futureDefectTwo,m.futureDefectThree,m.infrared,m.ultraviolet,m.finalDisposition,m.comments])
             return render_template("view.html", a=a, modules=modules)
         if searchParameter == "serial":
             serial = request.form['searchValue']
             modules = queryByObject("serial", serial)
+            if action == "csv":
+                timestr = time.strftime("%Y_%m_%d-%I_%M_%S_%p")
+                filename = timestr + ".csv"
+                with open(filename,'w',newline='')as f:
+                    writer = csv.writer(f)
+                    writer.writerow(['Donor','Serial number','Rated Watts', 'Module Manufacturer','Model','Weight kg','panel Dimension L', 'panel Dimension W', 'panel Dimension D',\
+                    'Vmp','Imp','Voc','Isc','Pmp temp coeff %','year of manufacture','location/intended project', 'Voc','Expected','Isc','Expected','Irradiance','Cell Temp c','Measured Pmp',\
+                    'Pmp watts Expected', '% of New Pmp','Measured Voc x Isc Watts','Expected Voc x Isc', '% of new Voc x Isc', 'infrared', 'corrosion # of cells', 'cell cracks # of cells',\
+                    'Eva Browning', 'Pattern of Browning', 'Frame Damage', 'Frame seal','Jbox damage','Jbox Loose','Nameplate faded/mising','Backside crakcs', 'Backside Bubbles', 'Backside Tears',\
+                    'Backside Chalking','Frontside Burn','Backside burn','Frontside glass-scratch/chip/crack','Delamination','Milky disoloration','residual metal','snail tracks-no resid', 'snail tracks -metal resid',\
+                    'Future defect', 'future defect 2', 'future defect 3', 'infrared','ultraviolet','final disposition','Comments'])
+                    for m in modules:
+                        writer.writerow([m.donor,m.serialNumber,m.ratedWatts,m.moduleManu,m.model,m.weight,m.panelDimensionL,m.panelDimensionW,m.panelDimensionD,m.vmp,m.imp,m.voc,m.isc,\
+                        m.pmpTemp,m.year,m.location,m.legacyVoc,m.legacyExpectedVoc,m.legacyIsc,m.legacyExpectedIsc,m.Irradiance,m.cellTemp,m.measuredpmp,m.expectedpmp,m.newpmp,m.measuredVocIsc,\
+                        m.expectedVocIsc,m.newVocIsc,m.legacyInfrared,m.corrosion,m.cellCracks,m.evaBrowning,m.patternBrowning,m.frameDamage,m.frameSeal,m.jboxDamage,m.jboxloose,m.nameplate,\
+                        m.backsideCracks,m.backsideBubbles,m.backsideTears,m.backsideChalking,m.frontsideBurn,m.backsideBurn,m.frontsideGlass,m.delamination,m.milkyDiscolor,m.residualMetal,\
+                        m.snailTracks,m.snailTracksRes,m.futureDefect,m.futureDefectTwo,m.futureDefectThree,m.infrared,m.ultraviolet,m.finalDisposition,m.comments])
             return render_template("view.html", a=a, modules=modules)
         if searchParameter == "manufacturer":
             manufacturer = request.form['searchValue']
             modules = queryByObject("manufacturer", manufacturer)
+            if action == "csv":
+                timestr = time.strftime("%Y_%m_%d-%I_%M_%S_%p")
+                filename = timestr + ".csv"
+                with open(filename,'w',newline='')as f:
+                    writer = csv.writer(f)
+                    writer.writerow(['Donor','Serial number','Rated Watts', 'Module Manufacturer','Model','Weight kg','panel Dimension L', 'panel Dimension W', 'panel Dimension D',\
+                    'Vmp','Imp','Voc','Isc','Pmp temp coeff %','year of manufacture','location/intended project', 'Voc','Expected','Isc','Expected','Irradiance','Cell Temp c','Measured Pmp',\
+                    'Pmp watts Expected', '% of New Pmp','Measured Voc x Isc Watts','Expected Voc x Isc', '% of new Voc x Isc', 'infrared', 'corrosion # of cells', 'cell cracks # of cells',\
+                    'Eva Browning', 'Pattern of Browning', 'Frame Damage', 'Frame seal','Jbox damage','Jbox Loose','Nameplate faded/mising','Backside crakcs', 'Backside Bubbles', 'Backside Tears',\
+                    'Backside Chalking','Frontside Burn','Backside burn','Frontside glass-scratch/chip/crack','Delamination','Milky disoloration','residual metal','snail tracks-no resid', 'snail tracks -metal resid',\
+                    'Future defect', 'future defect 2', 'future defect 3', 'infrared','ultraviolet','final disposition','Comments'])
+                    for m in modules:
+                        writer.writerow([m.donor,m.serialNumber,m.ratedWatts,m.moduleManu,m.model,m.weight,m.panelDimensionL,m.panelDimensionW,m.panelDimensionD,m.vmp,m.imp,m.voc,m.isc,\
+                        m.pmpTemp,m.year,m.location,m.legacyVoc,m.legacyExpectedVoc,m.legacyIsc,m.legacyExpectedIsc,m.Irradiance,m.cellTemp,m.measuredpmp,m.expectedpmp,m.newpmp,m.measuredVocIsc,\
+                        m.expectedVocIsc,m.newVocIsc,m.legacyInfrared,m.corrosion,m.cellCracks,m.evaBrowning,m.patternBrowning,m.frameDamage,m.frameSeal,m.jboxDamage,m.jboxloose,m.nameplate,\
+                        m.backsideCracks,m.backsideBubbles,m.backsideTears,m.backsideChalking,m.frontsideBurn,m.backsideBurn,m.frontsideGlass,m.delamination,m.milkyDiscolor,m.residualMetal,\
+                        m.snailTracks,m.snailTracksRes,m.futureDefect,m.futureDefectTwo,m.futureDefectThree,m.infrared,m.ultraviolet,m.finalDisposition,m.comments])
             return render_template("view.html", a=a, modules=modules)
         if searchParameter == "Model":
             model = request.form['searchValue']
             modules = queryByObject("model", model)
+            if action == "csv":
+                timestr = time.strftime("%Y_%m_%d-%I_%M_%S_%p")
+                filename = timestr + ".csv"
+                with open(filename,'w',newline='')as f:
+                    writer = csv.writer(f)
+                    writer.writerow(['Donor','Serial number','Rated Watts', 'Module Manufacturer','Model','Weight kg','panel Dimension L', 'panel Dimension W', 'panel Dimension D',\
+                    'Vmp','Imp','Voc','Isc','Pmp temp coeff %','year of manufacture','location/intended project', 'Voc','Expected','Isc','Expected','Irradiance','Cell Temp c','Measured Pmp',\
+                    'Pmp watts Expected', '% of New Pmp','Measured Voc x Isc Watts','Expected Voc x Isc', '% of new Voc x Isc', 'infrared', 'corrosion # of cells', 'cell cracks # of cells',\
+                    'Eva Browning', 'Pattern of Browning', 'Frame Damage', 'Frame seal','Jbox damage','Jbox Loose','Nameplate faded/mising','Backside crakcs', 'Backside Bubbles', 'Backside Tears',\
+                    'Backside Chalking','Frontside Burn','Backside burn','Frontside glass-scratch/chip/crack','Delamination','Milky disoloration','residual metal','snail tracks-no resid', 'snail tracks -metal resid',\
+                    'Future defect', 'future defect 2', 'future defect 3', 'infrared','ultraviolet','final disposition','Comments'])
+                    for m in modules:
+                        writer.writerow([m.donor,m.serialNumber,m.ratedWatts,m.moduleManu,m.model,m.weight,m.panelDimensionL,m.panelDimensionW,m.panelDimensionD,m.vmp,m.imp,m.voc,m.isc,\
+                        m.pmpTemp,m.year,m.location,m.legacyVoc,m.legacyExpectedVoc,m.legacyIsc,m.legacyExpectedIsc,m.Irradiance,m.cellTemp,m.measuredpmp,m.expectedpmp,m.newpmp,m.measuredVocIsc,\
+                        m.expectedVocIsc,m.newVocIsc,m.legacyInfrared,m.corrosion,m.cellCracks,m.evaBrowning,m.patternBrowning,m.frameDamage,m.frameSeal,m.jboxDamage,m.jboxloose,m.nameplate,\
+                        m.backsideCracks,m.backsideBubbles,m.backsideTears,m.backsideChalking,m.frontsideBurn,m.backsideBurn,m.frontsideGlass,m.delamination,m.milkyDiscolor,m.residualMetal,\
+                        m.snailTracks,m.snailTracksRes,m.futureDefect,m.futureDefectTwo,m.futureDefectThree,m.infrared,m.ultraviolet,m.finalDisposition,m.comments])
             return render_template("view.html", a=a, modules=modules)
         if searchParameter == "location":
             model = request.form['searchValue']
             modules = queryByObject("location",model)
+            if action == "csv":
+                timestr = time.strftime("%Y_%m_%d-%I_%M_%S_%p")
+                filename = timestr + ".csv"
+                with open(filename,'w',newline='')as f:
+                    writer = csv.writer(f)
+                    writer.writerow(['Donor','Serial number','Rated Watts', 'Module Manufacturer','Model','Weight kg','panel Dimension L', 'panel Dimension W', 'panel Dimension D',\
+                    'Vmp','Imp','Voc','Isc','Pmp temp coeff %','year of manufacture','location/intended project', 'Voc','Expected','Isc','Expected','Irradiance','Cell Temp c','Measured Pmp',\
+                    'Pmp watts Expected', '% of New Pmp','Measured Voc x Isc Watts','Expected Voc x Isc', '% of new Voc x Isc', 'infrared', 'corrosion # of cells', 'cell cracks # of cells',\
+                    'Eva Browning', 'Pattern of Browning', 'Frame Damage', 'Frame seal','Jbox damage','Jbox Loose','Nameplate faded/mising','Backside crakcs', 'Backside Bubbles', 'Backside Tears',\
+                    'Backside Chalking','Frontside Burn','Backside burn','Frontside glass-scratch/chip/crack','Delamination','Milky disoloration','residual metal','snail tracks-no resid', 'snail tracks -metal resid',\
+                    'Future defect', 'future defect 2', 'future defect 3', 'infrared','ultraviolet','final disposition','Comments'])
+                    for m in modules:
+                        writer.writerow([m.donor,m.serialNumber,m.ratedWatts,m.moduleManu,m.model,m.weight,m.panelDimensionL,m.panelDimensionW,m.panelDimensionD,m.vmp,m.imp,m.voc,m.isc,\
+                        m.pmpTemp,m.year,m.location,m.legacyVoc,m.legacyExpectedVoc,m.legacyIsc,m.legacyExpectedIsc,m.Irradiance,m.cellTemp,m.measuredpmp,m.expectedpmp,m.newpmp,m.measuredVocIsc,\
+                        m.expectedVocIsc,m.newVocIsc,m.legacyInfrared,m.corrosion,m.cellCracks,m.evaBrowning,m.patternBrowning,m.frameDamage,m.frameSeal,m.jboxDamage,m.jboxloose,m.nameplate,\
+                        m.backsideCracks,m.backsideBubbles,m.backsideTears,m.backsideChalking,m.frontsideBurn,m.backsideBurn,m.frontsideGlass,m.delamination,m.milkyDiscolor,m.residualMetal,\
+                        m.snailTracks,m.snailTracksRes,m.futureDefect,m.futureDefectTwo,m.futureDefectThree,m.infrared,m.ultraviolet,m.finalDisposition,m.comments])
             return render_template("update.html", a=a, modules=modules)
     return render_template("view.html", a=a)
 
