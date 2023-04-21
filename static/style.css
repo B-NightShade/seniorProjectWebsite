@@ -40,4 +40,7 @@ ul {
   border: 1px solid darkgrey;
   padding: 4px;
  }
+ body{
+  font-size:large;
+ }
  }

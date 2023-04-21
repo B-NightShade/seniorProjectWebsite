@@ -10,18 +10,17 @@ import mysql.connector
 from mysql.connector import errorcode
 from flask_login import LoginManager, UserMixin, login_user, \
     logout_user, current_user, login_required
-
+import config
 
 
 app = Flask(__name__, static_url_path='/static')
 
-app.config['SECRET_KEY'] = "secret"
+app.config['SECRET_KEY']=config.SECRETKEY
 
-USER = 'ESSWebsite2023'
-PASSWORD = 'ConergyDonation'
-HOST = 'ESSWebsite2023.mysql.pythonanywhere-services.com'
-DATABASE = 'ESSWebsite2023$EES'
-
+USER = config.USER
+PASSWORD = config.PASSWORD
+HOST = config.HOST
+DATABASE = config.DATABASE
 
 def createConnection():
     try:
@@ -257,6 +256,8 @@ def queryByObject(name, searchObject):
         query = "SELECT * FROM solar_module WHERE Module=%s"
     if (name == "id"):
         query = "SELECT * FROM solar_module WHERE Id=%s"
+    if (name == "location"):
+        query = "SELECT * FROM solar_module WHERE Location=%s"
     cursor.execute(query,(searchObject,))
     units=cursor.fetchall()
     #close the cursor after you grab your data
@@ -573,6 +574,10 @@ def update():
             model = request.form['searchValue']
             modules = queryByObject("model", model)
             return render_template("update.html", a=a, modules=modules)
+        if searchParameter == "location":
+            model = request.form['searchValue']
+            modules = queryByObject("location",model)
+            return render_template("update.html", a=a, modules=modules)
     return render_template("update.html", a=a)
 
 @app.route('/update/<id>', methods=['GET','POST'])
@@ -712,6 +717,10 @@ def delete():
             model = request.form['searchValue']
             modules = queryByObject("model", model)
             return render_template("delete.html", a=a, modules=modules)
+        if searchParameter == "location":
+            model = request.form['searchValue']
+            modules = queryByObject("location",model)
+            return render_template("update.html", a=a, modules=modules)
     return render_template("delete.html", a=a)
 
 @app.route('/delete/<id>')
@@ -783,6 +792,10 @@ def view():
             model = request.form['searchValue']
             modules = queryByObject("model", model)
             return render_template("view.html", a=a, modules=modules)
+        if searchParameter == "location":
+            model = request.form['searchValue']
+            modules = queryByObject("location",model)
+            return render_template("update.html", a=a, modules=modules)
     return render_template("view.html", a=a)
 
 @app.route('/logout', methods=['GET','POST'])
