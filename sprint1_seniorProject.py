@@ -11,6 +11,8 @@ from mysql.connector import errorcode
 from flask_login import LoginManager, UserMixin, login_user, \
     logout_user, current_user, login_required
 import config
+import csv
+import time
 
 
 app = Flask(__name__, static_url_path='/static')
@@ -55,7 +57,7 @@ class Module:
     isc = 0
     pmpTemp = 0
     year = ""
-    loaction = ""
+    location = ""
     legacyVoc = 0
     legacyExpectedVoc = 0
     legacyIsc = 0
@@ -141,8 +143,8 @@ def queryall():
     units=cursor.fetchall()
     #close the cursor after you grab your data
     cursor.close()
-    print("units:")
-    print(units)
+    #print("units:")
+    #print(units)
     modules=[]
     for row in units:
         module.donor = row[0]
@@ -170,7 +172,7 @@ def queryall():
         id = row[21]
 
         #add legacy data associated with same module
-        print(id)
+        #print(id)
         cursor = connection.cursor(buffered=True)
         query = "SELECT * FROM legacyData WHERE Id = %s"
         cursor.execute(query, (id,))
@@ -178,7 +180,7 @@ def queryall():
         legacy=cursor.fetchall()
         #close the cursor after you grab your data
         cursor.close()
-        print(legacy)
+        #print(legacy)
         for l in legacy:
             module.legacyVoc = l[0]
             module.legacyExpectedVoc = l[1]
@@ -262,7 +264,7 @@ def queryByObject(name, searchObject):
     units=cursor.fetchall()
     #close the cursor after you grab your data
     cursor.close()
-    print(units)
+    #print(units)
     modules=[]
     for row in units:
         module.donor = row[0]
@@ -297,7 +299,7 @@ def queryByObject(name, searchObject):
         legacy=cursor.fetchall()
         #close the cursor after you grab your data
         cursor.close()
-        print(legacy)
+        #print(legacy)
         for l in legacy:
             module.legacyVoc = l[0]
             module.legacyExpectedVoc = l[1]
@@ -360,6 +362,7 @@ def queryByObject(name, searchObject):
     connection.close()
     return modules
 
+
 '''
 login_manager = LoginManager(app)
 login_manager.init_app(app)
@@ -414,24 +417,6 @@ def login():
                     userpass = row[0]
                 if password == userpass:
                     print("ugh I made it here")
-                    '''
-                    cursor = connection.cursor()
-                    query = "SELECT * FROM user_login WHERE Username = %s AND Pass = %s"
-                    cursor.execute(query, (username, userpass))
-                    users=cursor.fetchall()
-                    cursor.close()
-                    for row in users:
-                        user_username = row[0]
-                        user_password = row[1]
-                    print("hey there")
-                    user = User(user_username, user_password)
-                    print("user:")
-                    print(user)
-                    print(type(user))
-                    login_user(user)
-                    print("done"
-                    connection.close()
-                    '''
                     session['loggedin'] = True
                     return redirect(url_for('home'))
         except mysql.connector.Error as err:
@@ -471,15 +456,16 @@ def create():
         irradiance = request.form['irradiance']
         cellTemp= request.form['cellTempC']
         measuredPmp = request.form['pmp']
+        PmpExpected = (irradiance/1000)*ratedWatts+(ratedWatts*pmpTemp*(irradiance/1000)*(cellTemp-25))
 
         cursor = connection.cursor()
         query = 'INSERT INTO solar_module\
                     (donor, serial, Rated_watts, Module_manufacturer, Module,\
                     Weight_kg, Panel_Dimensions_L, Panel_Dimensions_W, Panel_Dimensions_D,\
                     VMP, IMP, Voc, Isc,pmpTemp, Year_of_Manufacture, Location,\
-                    Irradiance, Cell_Temp_C, Measured_Pmp_watts)\
+                    Irradiance, Cell_Temp_C, Measured_Pmp_watts,Pmp_Watts_Expected)\
                     VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
-        cursor.execute(query, (donor,serial,ratedWatts,panelManufacturer,model,weight,length,width,depth,vmp,imp,voc,isc,pmpTemp,year,location,irradiance,cellTemp,measuredPmp))
+        cursor.execute(query, (donor,serial,ratedWatts,panelManufacturer,model,weight,length,width,depth,vmp,imp,voc,isc,pmpTemp,year,location,irradiance,cellTemp,measuredPmp,PmpExpected))
         connection.commit()
         cursor.close()
 
@@ -616,6 +602,7 @@ def updateEntry(id):
         irradiance = request.form['irradiance']
         cellTemp= request.form['cellTempC']
         measuredPmp = request.form['pmp']
+        PmpExpected = (irradiance/1000)*ratedWatts+(ratedWatts*pmpTemp*(irradiance/1000)*(cellTemp-25))
 
         print("voc: " + str(voc))
         print("vmp: " + str(vmp))
@@ -625,9 +612,9 @@ def updateEntry(id):
                     SET donor = %s, serial = %s, Rated_watts = %s, Module_manufacturer = %s, Module = %s,\
                     Weight_kg = %s, Panel_Dimensions_L = %s, Panel_Dimensions_W = %s, Panel_Dimensions_D = %s,\
                     VMP = %s, IMP = %s, Voc = %s, Isc = %s,pmpTemp = %s, Year_of_Manufacture = %s, Location=%s,\
-                    Irradiance = %s, Cell_Temp_C = %s, Measured_Pmp_watts = %s\
+                    Irradiance = %s, Cell_Temp_C = %s, Measured_Pmp_watts = %s, Pmp_Watts_Expected=%s\
                     WHERE Id = %s"
-        cursor.execute(query, (donor,serial,ratedWatts,panelManufacturer,model,weight,length,width,depth,vmp,imp,voc,isc,pmpTemp,year,location,irradiance,cellTemp,measuredPmp,id))
+        cursor.execute(query, (donor,serial,ratedWatts,panelManufacturer,model,weight,length,width,depth,vmp,imp,voc,isc,pmpTemp,year,location,irradiance,cellTemp,measuredPmp,PmpExpected,id))
         connection.commit()
         cursor.close()
 
@@ -720,7 +707,7 @@ def delete():
         if searchParameter == "location":
             model = request.form['searchValue']
             modules = queryByObject("location",model)
-            return render_template("update.html", a=a, modules=modules)
+            return render_template("delete.html", a=a, modules=modules)
     return render_template("delete.html", a=a)
 
 @app.route('/delete/<id>')
@@ -771,10 +758,27 @@ def view():
     if request.method =="POST":
         searchParameter = request.form['search']
         print(searchParameter)
+        action = request.form['type']
+        print(action)
         if searchParameter == "all":
             modules = queryall()
-            print(view)
-            print(modules)
+            if action == "csv":
+                timestr = time.strftime("%Y_%m_%d-%I_%M_%S_%p")
+                filename = timestr + ".csv"
+                with open(filename,'w',newline='')as f:
+                    writer = csv.writer(f)
+                    writer.writerow(['Donor','Serial number','Rated Watts', 'Module Manufacturer','Model','Weight kg','panel Dimension L', 'panel Dimension W', 'panel Dimension D',\
+                    'Vmp','Imp','Voc','Isc','Pmp temp coeff %','year of manufacture','location/intended project', 'Voc','Expected','Isc','Expected','Irradiance','Cell Temp c','Measured Pmp',\
+                    'Pmp watts Expected', '% of New Pmp','Measured Voc x Isc Watts','Expected Voc x Isc', '% of new Voc x Isc', 'infrared', 'corrosion # of cells', 'cell cracks # of cells',\
+                    'Eva Browning', 'Pattern of Browning', 'Frame Damage', 'Frame seal','Jbox damage','Jbox Loose','Nameplate faded/mising','Backside crakcs', 'Backside Bubbles', 'Backside Tears',\
+                    'Backside Chalking','Frontside Burn','Backside burn','Frontside glass-scratch/chip/crack','Delamination','Milky disoloration','residual metal','snail tracks-no resid', 'snail tracks -metal resid',\
+                    'Future defect', 'future defect 2', 'future defect 3', 'infrared','ultraviolet','final disposition','Comments'])
+                    for m in modules:
+                        writer.writerow([m.donor,m.serialNumber,m.ratedWatts,m.moduleManu,m.model,m.weight,m.panelDimensionL,m.panelDimensionW,m.panelDimensionD,m.vmp,m.imp,m.voc,m.isc,\
+                        m.pmpTemp,m.year,m.location,m.legacyVoc,m.legacyExpectedVoc,m.legacyIsc,m.legacyExpectedIsc,m.Irradiance,m.cellTemp,m.measuredpmp,m.expectedpmp,m.newpmp,m.measuredVocIsc,\
+                        m.expectedVocIsc,m.newVocIsc,m.legacyInfrared,m.corrosion,m.cellCracks,m.evaBrowning,m.patternBrowning,m.frameDamage,m.frameSeal,m.jboxDamage,m.jboxloose,m.nameplate,\
+                        m.backsideCracks,m.backsideBubbles,m.backsideTears,m.backsideChalking,m.frontsideBurn,m.backsideBurn,m.frontsideGlass,m.delamination,m.milkyDiscolor,m.residualMetal,\
+                        m.snailTracks,m.snailTracksRes,m.futureDefect,m.futureDefectTwo,m.futureDefectThree,m.infrared,m.ultraviolet,m.finalDisposition,m.comments])
             return render_template("view.html", a=a, modules=modules)
         if searchParameter == "donor":
             donor = request.form['searchValue']
@@ -798,15 +802,10 @@ def view():
             return render_template("update.html", a=a, modules=modules)
     return render_template("view.html", a=a)
 
+
+
 @app.route('/logout', methods=['GET','POST'])
 def logout():
-    '''
-    a= False
-    #a = current_user.is_authenticated
-    if request.method == "POST":
-        logout_user()
-        print("successfully logged out")
-    '''
     session.pop("loggedin", None)
     return redirect(url_for("home"))
 
