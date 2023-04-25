@@ -214,7 +214,7 @@ def queryall():
             module.backsideChalking = defect[12]
             module.frontsideBurn = defect[13]
             module.backsideBurn = defect[14]
-            module.frontsideGlass = defect[15]
+            module.frontsideGlass = defect[27]
             module.delamination = defect[16]
             module.milkyDiscolor = defect[17]
             module.residualMetal = defect[18]
@@ -234,7 +234,7 @@ def queryall():
             #close the cursor after you grab your data
             cursor.close()
             for d in disposition:
-                module.disposition = d[1]
+                module.finalDisposition = d[1]
                 module.comments = d[2]
         copyModule = Module()
         copyModule = module
@@ -333,7 +333,7 @@ def queryByObject(name, searchObject):
             module.backsideChalking = defect[12]
             module.frontsideBurn = defect[13]
             module.backsideBurn = defect[14]
-            module.frontsideGlass = defect[15]
+            module.frontsideGlass = defect[27]
             module.delamination = defect[16]
             module.milkyDiscolor = defect[17]
             module.residualMetal = defect[18]
@@ -353,7 +353,7 @@ def queryByObject(name, searchObject):
             #close the cursor after you grab your data
             cursor.close()
             for d in disposition:
-                module.disposition = d[1]
+                module.finalDisposition = d[1]
                 module.comments = d[2]
         copyModule = Module()
         copyModule = module
@@ -456,16 +456,27 @@ def create():
         irradiance = request.form['irradiance']
         cellTemp= request.form['cellTempC']
         measuredPmp = request.form['pmp']
-        PmpExpected = (irradiance/1000)*ratedWatts+(ratedWatts*pmpTemp*(irradiance/1000)*(cellTemp-25))
+        PmpExpected = ""
+        newPmp = ""
+        if(irradiance != "" and ratedWatts != "" and pmpTemp!="" and cellTemp!=""):
+            PmpExpected = (float(irradiance)/1000)*float(ratedWatts)+(float(ratedWatts)*float(pmpTemp)*(float(irradiance)/1000)*(float(cellTemp)-25))
+            newPmp= (float(measuredPmp))/ (float(PmpExpected))
+        #print(request.form['pmpTemp'])
+        #print(pmpTemp)
+        #print(measuredPmp)
+        print(PmpExpected)
+        #print(request.form['pmp'])
 
         cursor = connection.cursor()
         query = 'INSERT INTO solar_module\
                     (donor, serial, Rated_watts, Module_manufacturer, Module,\
                     Weight_kg, Panel_Dimensions_L, Panel_Dimensions_W, Panel_Dimensions_D,\
                     VMP, IMP, Voc, Isc,pmpTemp, Year_of_Manufacture, Location,\
-                    Irradiance, Cell_Temp_C, Measured_Pmp_watts,Pmp_Watts_Expected)\
-                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
-        cursor.execute(query, (donor,serial,ratedWatts,panelManufacturer,model,weight,length,width,depth,vmp,imp,voc,isc,pmpTemp,year,location,irradiance,cellTemp,measuredPmp,PmpExpected))
+                    Irradiance, Cell_Temp_C, Measured_Pmp_Watts,Pmp_Watts_Expected,newPmp)\
+                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
+        cursor.execute(query, (donor,serial,ratedWatts,panelManufacturer,model,weight,length,width,depth,vmp,imp,voc,isc,pmpTemp,year,location,irradiance,cellTemp,measuredPmp,PmpExpected,newPmp))
+
+        print("after" + measuredPmp)
         connection.commit()
         cursor.close()
 
@@ -602,7 +613,11 @@ def updateEntry(id):
         irradiance = request.form['irradiance']
         cellTemp= request.form['cellTempC']
         measuredPmp = request.form['pmp']
-        PmpExpected = (irradiance/1000)*ratedWatts+(ratedWatts*pmpTemp*(irradiance/1000)*(cellTemp-25))
+        PmpExpected = ""
+        newPmp = ""
+        if(irradiance != "" and ratedWatts != "" and pmpTemp!="" and cellTemp!=""):
+            PmpExpected = (float(irradiance)/1000)*float(ratedWatts)+(float(ratedWatts)*float(pmpTemp)*(float(irradiance)/1000)*(float(cellTemp)-25))
+            newPmp= (float(measuredPmp))/ (float(PmpExpected))
 
         print("voc: " + str(voc))
         print("vmp: " + str(vmp))
@@ -612,9 +627,9 @@ def updateEntry(id):
                     SET donor = %s, serial = %s, Rated_watts = %s, Module_manufacturer = %s, Module = %s,\
                     Weight_kg = %s, Panel_Dimensions_L = %s, Panel_Dimensions_W = %s, Panel_Dimensions_D = %s,\
                     VMP = %s, IMP = %s, Voc = %s, Isc = %s,pmpTemp = %s, Year_of_Manufacture = %s, Location=%s,\
-                    Irradiance = %s, Cell_Temp_C = %s, Measured_Pmp_watts = %s, Pmp_Watts_Expected=%s\
+                    Irradiance = %s, Cell_Temp_C = %s, Measured_Pmp_watts = %s, Pmp_Watts_Expected=%s, newPmp=%s\
                     WHERE Id = %s"
-        cursor.execute(query, (donor,serial,ratedWatts,panelManufacturer,model,weight,length,width,depth,vmp,imp,voc,isc,pmpTemp,year,location,irradiance,cellTemp,measuredPmp,PmpExpected,id))
+        cursor.execute(query, (donor,serial,ratedWatts,panelManufacturer,model,weight,length,width,depth,vmp,imp,voc,isc,pmpTemp,year,location,irradiance,cellTemp,measuredPmp,PmpExpected,newPmp,id))
         connection.commit()
         cursor.close()
 
@@ -646,17 +661,19 @@ def updateEntry(id):
         infrared = request.form['infrared']
         ultraviolet = request.form['ultraviolet']
 
+        print("frontsideglass " + frontsideGlass)
+
         #scarch-chip-crack
         cursor = connection.cursor()
         query = "UPDATE defectModes\
                     SET Corrosion_cells = %s, Cell_Cracks = %s, EVA_Browning = %s, Pattern_of_Browning = %s, Frame_Damage= %s,\
                     Frame_Seal = %s, Jbox_Damage = %s, Jbox_Loose = %s, Nameplate_Faded_Missing = %s, Backside_Cracks = %s,\
-                    Backside_Bubbles = %s, Backside_Tears_Scratches = %s,Backside_Chalking  = %s,Frontside_Burn_Mark = %s,Backside_Burn_Mark = %s, Frontside_Burn_Mark = %s,\
+                    Backside_Bubbles = %s, Backside_Tears_Scratches = %s,Backside_Chalking  = %s,Frontside_Burn_Mark = %s,Backside_Burn_Mark = %s,\
                     Frontside_Glass = %s, Delamination = %s, Milky_Discoloration = %s, Residual_Metal = %s,Snail_Tracks=%s, Snail_Tracks_Resid=%s, Future_Defect_1=%s,\
                     Future_Defect_2=%s, Future_Defect_3=%s, Infrared=%s, Ultraviolet=%s\
                     WHERE Id = %s"
         cursor.execute(query, (corrosion,cracks,evaBrowning,patternBrowning,frameDamage,frameSeal,jBoxDamage,jBoxLoose,nameplate,backsideCracks,backsideBubbles,backsideTears,backsideChalking,\
-                                frontsideBurn,backsideBurn,frontsideBurn,frontsideGlass,delamination,milky,residualMetal,snailTracks,snailTracksRes,defectOne,defectTwo,defectThree,infrared,ultraviolet,id))
+                                frontsideBurn,backsideBurn,frontsideGlass,delamination,milky,residualMetal,snailTracks,snailTracksRes,defectOne,defectTwo,defectThree,infrared,ultraviolet,id))
         connection.commit()
         cursor.close()
 

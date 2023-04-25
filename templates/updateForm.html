@@ -8,6 +8,7 @@
     {% block heading %} Update Entry {% endblock %}
 
     {% block content %}
+    <body>
     {% for module in modules %}
         <form method = "POST">
             <h1>Solar Module Tracking List</h1>
@@ -60,91 +61,91 @@
             Cell cracks # of cells: <input type="number" name="cracks" value="{{ module.cellCracks }}" step="any">
             <br>
             Eva Browning: <select name="evaBrowning" value="{{ module.evaBrowning }}">
-                            <option value="None">not tested</option>
-                            <option value="low">low</option>
-                            <option value="medium">medium</option>
-                            <option value="high">high</option>
-                            <option value="extreme">extreme</option>
+                            <option value="None" {% if module.evaBrowning=='None' %} selected="selected"{% endif %}>not tested</option>
+                            <option value="low" {% if module.evaBrowning=='low' %} selected="selected"{% endif %}>low</option>
+                            <option value="medium" {% if module.evaBrowning=='medium' %} selected="selected"{% endif %}>medium</option>
+                            <option value="high" {% if module.evaBrowning=='high' %} selected="selected"{% endif %}>high</option>
+                            <option value="extreme" {% if module.evaBrowning=='extreme' %} selected="selected"{% endif %}>extreme</option>
                         </select>
             <br>
             pattern of Browning: <select name="patternBrowning" value="{{ module.patternBrowning }}">
-                            <option value="None">not tested</option>
-                            <option value="center">center</option>
-                            <option value="edge">edge</option>
-                            <option value="other">other</option>
-                            <option value="none">none</option>
+                            <option value="None" {% if module.patternBrowning=='None' %} selected="selected"{% endif %}>not tested</option>
+                            <option value="center" {% if module.patternBrowning=='center' %} selected="selected"{% endif %}>center</option>
+                            <option value="edge" {% if module.patternBrowning=='edge' %} selected="selected"{% endif %}>edge</option>
+                            <option value="other" {% if module.patternBrowning=='other' %} selected="selected"{% endif %}>other</option>
+                            <option value="none" {% if module.patternBrowning=='none' %} selected="selected"{% endif %}>none</option>
                         </select>
             <br>
             Frame damage: <select name="frameDamage" value="{{ module.frameDamage }}">
-                <option value="None">not tested</option>
-                <option value="yes">yes</option>
-                <option value="no">no</option>
+                <option value="None" {% if module.frameDamage=='None' %} selected="selected"{% endif %}>not tested</option>
+                <option value="yes" {% if module.frameDamage=='yes' %} selected="selected"{% endif %}>yes</option>
+                <option value="no" {% if module.frameDamage=='no' %} selected="selected"{% endif %}>no</option>
             </select>
             <br>
             Frame seal: <select name="frameSeal" value="{{ module.frameSeal }}">
-                <option value="None">not tested</option>
-                <option value="yes">yes</option>
-                <option value="no">no</option>
+                <option value="None" {% if module.frameSeal=='None' %} selected="selected"{% endif %}>not tested</option>
+                <option value="yes" {% if module.frameSeal=='yes' %} selected="selected"{% endif %}>yes</option>
+                <option value="no" {% if module.frameSeal=='no' %} selected="selected"{% endif %}>no</option>
             </select>
             <br>
             Jbox damage: <select name="jBoxDamage" value="{{ module.jboxDamage }}">
-                <option value="None">not tested</option>
-                <option value="yes">yes</option>
-                <option value="no">no</option>
+                <option value="None" {% if module.jboxDamage=='None' %} selected="selected"{% endif %}>not tested</option>
+                <option value="yes" {% if module.jboxDamage=='yes' %} selected="selected"{% endif %}>yes</option>
+                <option value="no" {% if module.jboxDamage=='no' %} selected="selected"{% endif %}>no</option>
             </select>
             <br>
             Jbox loose: <select name="jBoxLoose" value="{{ module.jboxloose }}">
-                <option value="None">not tested</option>
-                <option value="yes">yes</option>
-                <option value="no">no</option>
+                <option value="None" {% if module.jboxloose=='None' %} selected="selected"{% endif %}>not tested</option>
+                <option value="yes" {% if module.jboxloose=='yes' %} selected="selected"{% endif %}>yes</option>
+                <option value="no" {% if module.jboxloose=='no' %} selected="selected"{% endif %}>no</option>
             </select>
             <br>
             nameplate faded/missing: <select name="nameplate" value="{{ module.nameplate }}">
-                <option value="None">not tested</option>
-                <option value="yes">yes</option>
-                <option value="no">no</option>
+                <option value="None" {% if module.nameplate=='None' %} selected="selected"{% endif %}>not tested</option>
+                <option value="yes" {% if module.nameplate=='yes' %} selected="selected"{% endif %}>yes</option>
+                <option value="no" {% if module.nameplate=='no' %} selected="selected"{% endif %}>no</option>
             </select>
             <br>
             backside cracks: <select name="backsideCracks" value="{{ module.backsideCracks }}">
-                <option value="None">not tested</option>
-                <option value="yes">yes</option>
-                <option value="no">no</option>
+                <option value="None" {% if module.backsideCracks=='None' %} selected="selected"{% endif %}>not tested</option>
+                <option value="yes" {% if module.backsideCracks=='yes' %} selected="selected"{% endif %}>yes</option>
+                <option value="no" {% if module.backsideCracks=='no' %} selected="selected"{% endif %}>no</option>
             </select>
             <br>
             backside Bubbles: <select name="backsideBubbles" value="{{ module.backsideBubbles }}">
-                <option value="None">not tested</option>
-                <option value="yes">yes</option>
-                <option value="no">no</option>
+                <option value="None" {% if module.backsideBubbles=='None' %} selected="selected"{% endif %}>not tested</option>
+                <option value="yes" {% if module.backsideBubbles=='yes' %} selected="selected"{% endif %}>yes</option>
+                <option value="no" {% if module.backsideBubbles=='no' %} selected="selected"{% endif %}>no</option>
             </select>
             <br>
             backside tears/scratches: <select name="backsideTears" value="{{ module.backsideTears }}">
-                <option value="None">not tested</option>
-                <option value="yes">yes</option>
-                <option value="no">no</option>
+                <option value="None" {% if module.backsideTears=='None' %} selected="selected"{% endif %}>not tested</option>
+                <option value="yes" {% if module.backsideTears=='yes' %} selected="selected"{% endif %}>yes</option>
+                <option value="no" {% if module.backsideTears=='no' %} selected="selected"{% endif %}>no</option>
             </select>
             <br>
             backside chalking: <select name="backsideChalking" value="{{ module.backsideChalking }}">
-                <option value="None">not tested</option>
-                <option value="yes">yes</option>
-                <option value="no">no</option>
+                <option value="None" {% if module.backsideChalking=='None' %} selected="selected"{% endif %}>not tested</option>
+                <option value="yes" {% if module.backsideChalking=='yes' %} selected="selected"{% endif %}>yes</option>
+                <option value="no" {% if module.backsideChalking=='no' %} selected="selected"{% endif %}>no</option>
             </select>
             <br>
             Frontside burn mark: <select name="frontsideBurn" value="{{ module.frontsideBurn }}">
-                <option value="None">not tested</option>
-                <option value="yes">yes</option>
-                <option value="no">no</option>
+                <option value="None" {% if module.frontsideBurn=='None' %} selected="selected"{% endif %}>not tested</option>
+                <option value="yes" {% if module.frontsideBurn=='yes' %} selected="selected"{% endif %}>yes</option>
+                <option value="no" {% if module.frontsideBurn=='no' %} selected="selected"{% endif %}>no</option>
             </select>
             <br>
             backside burn mark: <select name="backsideBurn" value="{{ module.backsideBurn }}">
-                <option value="None">not tested</option>
-                <option value="yes">yes</option>
-                <option value="no">no</option>
+                <option value="None" {% if module.backsideBurn=='None' %} selected="selected"{% endif %}>not tested</option>
+                <option value="yes" {% if module.backsideBurn=='yes' %} selected="selected"{% endif %}>yes</option>
+                <option value="no" {% if module.backsideBurn=='no' %} selected="selected"{% endif %}>no</option>
             </select>
             <br>
             frontside glass-Scratch/chip/crack: <select name="frontsideGlass" value="{{ module.frontsideGlass }}">
-                <option value="None">not tested</option>
-                <option value="yes">yes</option>
-                <option value="no">no</option>
+                <option value="None" {% if module.frontsideGlass=='None' %} selected="selected"{% endif %}>not tested</option>
+                <option value="yes" {% if module.frontsideGlass=='yes' %} selected="selected"{% endif %}>yes</option>
+                <option value="no" {% if module.frontsideGlass=='no' %} selected="selected"{% endif %}>no</option>
             </select>
             <br>
             Delamination: <input type="number" name="delamination" value="{{ module.delamination }}" step="any">
@@ -164,31 +165,33 @@
             Future defect 3: <input type="number" name="defectThree" value="{{ module.futureDefectThree }}" step="any">
             <br>
             Infrared: <select name="infrared" value="{{ module.infrared }}">
-                <option value="None">not tested</option>
-                <option value="yes">yes</option>
-                <option value="no">no</option>
+                <option value="None" {% if module.infrared=='None' %} selected="selected"{% endif %}>not tested</option>
+                <option value="yes" {% if module.infrared=='yes' %} selected="selected"{% endif %}>yes</option>
+                <option value="no" {% if module.infrared=='no' %} selected="selected"{% endif %}>no</option>
             </select>
             <br>
             ultraviolet: <select name="ultraviolet" value="{{ module.ultraviolet }}">
-                <option value="None">not tested</option>
-                <option value="yes">yes</option>
-                <option value="no">no</option>
+                <option value="None" {% if module.ultraviolet =='None' %} selected="selected"{% endif %}>not tested</option>
+                <option value="yes" {% if module.ultraviolet =='yes' %} selected="selected"{% endif %}>yes</option>
+                <option value="no" {% if module.ultraviolet =='no' %} selected="selected"{% endif %}>no</option>
             </select>
 
             <hr>
             <h1>Final Disposition</h1>
              disposition: <select name="disposition" value="{{ module.finalDisposition }}">
-                            <option value="None">not dispositioned</option>
-                            <option value="tierOne">tier 1</option>
-                            <option value="tierTwo">tier 2</option>
-                            <option value="dispose">dispose</option>
-                            <option value="recycle">recycle</option>
+                            <option value="None" {% if module.finalDisposition =='None' %} selected="selected"{% endif %}>not dispositioned</option>
+                            <option value="tierOne" {% if module.finalDisposition =='tierOne' %} selected="selected"{% endif %}>tier 1</option>
+                            <option value="tierTwo" {% if module.finalDisposition =='tierTwo' %} selected="selected"{% endif %}>tier 2</option>
+                            <option value="dispose" {% if module.finalDisposition =='dispose' %} selected="selected"{% endif %}>dispose</option>
+                            <option value="recycle" {% if module.finalDisposition =='recycle' %} selected="selected"{% endif %}>recycle</option>
                         </select>
             <br>
-            comments: <textarea name="comments" rows="2" cols="40"></textarea>
+            comments: <textarea name="comments" rows="2" cols="40">{{ module.comments }}</textarea>
             <br>
             <input type="submit" value="Update">
         </form>
     {% endfor %}
+
+    </body>
     {% endblock %}
 </html>
