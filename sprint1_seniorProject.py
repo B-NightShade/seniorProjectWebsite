@@ -433,6 +433,18 @@ def create():
         donor = ""
         model = ""
         panelManufacturer = ""
+        ratedWatts = ""
+        weight = ""
+        length = ""
+        width = ""
+        depth = ""
+        vmp = ""
+        imp = ""
+        voc = ""
+        isc = ""
+        pmpTemp = ""
+        year = ""
+        location = ""
     else:
         return redirect(url_for("login"))
     connection = createConnection()
@@ -539,7 +551,19 @@ def create():
             donor = ""
             model = ""
             panelManufacturer = ""
-    return render_template("create.html", a=a, donor=donor, model=model,panelManufacturer=panelManufacturer)
+            ratedWatts = ""
+            weight = ""
+            length = ""
+            width = ""
+            depth = ""
+            vmp = ""
+            imp = ""
+            voc = ""
+            isc = ""
+            pmpTemp = ""
+            year = ""
+            location = ""
+    return render_template("create.html",a=a,donor=donor,model=model,panelManufacturer=panelManufacturer,ratedWatts=ratedWatts,weight=weight,length=length,width=width,depth=depth,vmp=vmp,imp=imp,voc=voc,isc=isc,pmpTemp=pmpTemp,year=year,location=location)
 
 @app.route("/update", methods=['GET','POST'])
 def update():
