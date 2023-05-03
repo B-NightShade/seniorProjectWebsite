@@ -463,6 +463,9 @@ def create():
         voc = request.form['voc']
         isc = request.form['isc']
         pmpTemp = request.form['pmpTemp']
+        #makes the pmpTemp negative since it should always be negative
+        if float(pmpTemp) > 0:
+            pmpTemp = float(pmpTemp) * -1
         year = request.form['year']
         location = request.form['location']
         irradiance = request.form['irradiance']
@@ -470,14 +473,10 @@ def create():
         measuredPmp = request.form['pmp']
         PmpExpected = ""
         newPmp = ""
-        if(irradiance != "" and ratedWatts != "" and pmpTemp!="" and cellTemp!=""):
+        if(irradiance != "" and ratedWatts != "" and pmpTemp!="" and cellTemp!="" and irradiance != 0 and ratedWatts != 0 and pmpTemp!=0 and cellTemp!=0):
             PmpExpected = (float(irradiance)/1000)*float(ratedWatts)+(float(ratedWatts)*float(pmpTemp)*(float(irradiance)/1000)*(float(cellTemp)-25))
-            newPmp= (float(measuredPmp))/ (float(PmpExpected))
-        #print(request.form['pmpTemp'])
-        #print(pmpTemp)
-        #print(measuredPmp)
-        print(PmpExpected)
-        #print(request.form['pmp'])
+            if(PmpExpected != 0):
+                newPmp= (float(measuredPmp))/ (float(PmpExpected))
 
         cursor = connection.cursor()
         query = 'INSERT INTO solar_module\
@@ -639,9 +638,10 @@ def updateEntry(id):
         measuredPmp = request.form['pmp']
         PmpExpected = ""
         newPmp = ""
-        if(irradiance != "" and ratedWatts != "" and pmpTemp!="" and cellTemp!=""):
+        if(irradiance != "" and ratedWatts != "" and pmpTemp!="" and cellTemp!="" and irradiance != 0 and ratedWatts != 0 and pmpTemp!=0 and cellTemp!=0):
             PmpExpected = (float(irradiance)/1000)*float(ratedWatts)+(float(ratedWatts)*float(pmpTemp)*(float(irradiance)/1000)*(float(cellTemp)-25))
-            newPmp= (float(measuredPmp))/ (float(PmpExpected))
+            if(PmpExpected != 0):
+                newPmp= (float(measuredPmp))/ (float(PmpExpected))
 
         print("voc: " + str(voc))
         print("vmp: " + str(vmp))
