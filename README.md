@@ -13,6 +13,10 @@ The goal of this project was to make a inventory tracker for the equitable solar
 We have a login to this part of their website so that only the people the want to be able to
 alter the website/inventory can
 
+## videos showing product
+* [excel example](https://youtu.be/mayucHMFhJI "excel")
+* [data to csv](https://youtu.be/9xtsNgEDKdg "csv video")
+* [CRUD operations](https://youtu.be/tvgJy_spA9Y "product running")
 
 ### code explanations
 routes:
